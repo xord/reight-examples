@@ -1,0 +1,142 @@
+[
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 58,
+          "tone": 1
+        },
+        {
+          "index": 47,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 61,
+          "tone": 1
+        },
+        {
+          "index": 55,
+          "tone": 4
+        }
+      ],
+      [
+
+      ]
+    ]
+  },
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 70,
+          "tone": 4
+        },
+        {
+          "index": 57,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 48,
+          "tone": 4
+        },
+        {
+          "index": 51,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 77,
+          "tone": 4
+        },
+        {
+          "index": 70,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 66,
+          "tone": 4
+        },
+        {
+          "index": 63,
+          "tone": 3
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 64,
+          "tone": 6
+        },
+        {
+          "index": 69,
+          "tone": 4
+        },
+        {
+          "index": 29,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 65,
+          "tone": 4
+        },
+        {
+          "index": 35,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 67,
+          "tone": 6
+        },
+        {
+          "index": 78,
+          "tone": 4
+        },
+        {
+          "index": 26,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 49,
+          "tone": 4
+        },
+        {
+          "index": 31,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 61,
+          "tone": 6
+        },
+        {
+          "index": 65,
+          "tone": 4
+        },
+        {
+          "index": 28,
+          "tone": 2
+        }
+      ]
+    ]
+  }
+]
