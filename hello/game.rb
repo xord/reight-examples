@@ -6,7 +6,7 @@ class Game
     @shake = 0
 
     # 全スプライトを追加して物理演算処理用に登録しておく
-    add_sprite(*stage, player)
+    [*stage, player].each {add_sprite _1}
 
     # 重力を (x, y) で設定
     gravity(0, 500)
@@ -64,8 +64,13 @@ class Game
   end
 
   def key_down(key)
-    # SPACE キーが押されたらジャンプ
-    @player.vy = -150 if key == SPACE
+    # SPACE キーが押されたら
+    if key == SPACE
+      # 上方向の速度を与えてジャンプ
+      @player.vy = -150
+      # 0番目のサウンドを再生する
+      project.sounds[0].play
+    end
   end
 
   def stage()
@@ -88,6 +93,8 @@ class Game
           # 相手がコインならコインを消す
           stage.delete o
           remove_sprite o
+          # 1番目のサウンドを再生する
+          project.sounds[1].play
         when [0, 32]
           # 相手がトゲなら、弾かれるようにプライヤーの速度ベクトルを更新
           sp.vel    = (sp.pos - o.pos).dup.normalize * 200
@@ -95,6 +102,8 @@ class Game
           @shake    = 5
           # ゲームオーバーフラグを立てる
           @gameover = true
+          # 2番目のサウンドを再生する
+          project.sounds[2].play
         end
       end
       count = 0
@@ -126,13 +135,5 @@ key_pressed do
   # 押されたキーのキーコード
   key = key_code
   # キーが押されたメソッドを呼ぶ（キーリピートは無視）
-  $game&.key_down key if key != $last_key
-  # 最後に押されたキー変数を更新
-  $last_key = key
-end
-
-# キーが離されたら呼ばれる
-key_released do
-  # 最後に押されたキー変数をクリア
-  $last_key = nil
+  $game&.key_down key unless key_is_repeated
 end
