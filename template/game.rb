@@ -1,36 +1,16 @@
-def add_sp(array = nil, sp)
-  add_sprite sp
-  array&.push sp
-  sp
-end
-
-def delete_sp(array = nil, sp)
-  remove_sprite sp
-  array&.delete sp
-  sp
-end
-
-
 class Game
-  def initialize()
-  end
-
-  def update()
-  end
-
   def draw()
     background 0
   end
 
-  def key(code)
+  def key_down(code)
+  end
+
+  def key_up(code)
   end
 end
 
-
 setup        {$game = Game.new}
-draw         {$game.update; $game.draw}
-key_released {$prev_key = nil}
-key_pressed  {
-  $game.key key_code if key_code != $prev_key
-  $prev_key = key_code
-}
+draw         {$game&.draw}
+key_pressed  {$game&.key_down key_code unless key_is_repeated}
+key_released {$game&.key_up   key_code}
