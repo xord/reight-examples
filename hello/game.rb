@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 # ゲームを実装したクラス
 class Game
   def initialize()
@@ -6,7 +7,9 @@ class Game
     @shake = 0
 
     # 全スプライトを追加して物理演算処理用に登録しておく
-    [*stage, player].each {add_sprite _1}
+    [*stage, player].each do
+      add_sprite(_1)
+    end
 
     # 重力を (x, y) で設定
     gravity(0, 500)
@@ -38,7 +41,7 @@ class Game
 
     # 画面を揺らす
     if @shake != 0
-      shake = Vector.random2D() * @shake
+      shake = Vector.random2D * @shake
       translate(shake.x, shake.y)
     end
 
@@ -75,12 +78,12 @@ class Game
 
   def stage()
     # ステージ用のマップデータからスプライトを生成
-    @stage ||= project.maps.first.map(&:to_sprite)
+    @stage ||= project.maps.first.sprites
   end
 
   def player()
     # スプライト画像から位置と大きさを指定してスプライトを生成
-    @player ||= project.chips.at(0, 0, 8, 8).to_sprite.tap do |sp|
+    @player ||= project.chips.at(0, 0, 8, 8).sprite.tap do |sp|
       # スプライトの初期位置を指定
       sp.x, sp.y = 100, 50
       # 物理演算で動けるスプライトにする
