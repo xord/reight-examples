@@ -116,11 +116,10 @@ class Game
     @player ||= project.chips.at(0, 0, 8, 8).to_sprite.tap do |sp|
       # インスタンス生成する初回のみ初期化処理を実行
       # スプライトの初期位置を設定
-      sp.x, sp.y = (width - sp.w) / 2, height - sp.h * 2
-      # 物理演算対象とする
+      sp.x = (width - sp.w) / 2
+      sp.y = height - sp.h  * 2
+      # 物理演算で動けるスプライトにする
       sp.dynamic = true
-      # 回転の中心をスプライトの中心に設定
-      sp.pivot   = [0.5, 0.5]
     end
   end
 
@@ -131,7 +130,7 @@ class Game
       # 生成したスプライトの初期化処理
       # スプライトの初期位置を設定
       sp.x, sp.y = x, y
-      # 物理演算対象とする
+      # 物理演算で動けるスプライトにする
       sp.dynamic = true
       # スピードをランダムにする
       speed      = rand(20..30)
@@ -149,8 +148,10 @@ class Game
       end
       # 0.1〜0.3秒の間隔で左右方向の速度を反転する
       set_interval(rand(0.1..0.3)) {sp.vx *= -1}
-      # 敵スプライトを物理エンジンに登録し、配列にも追加する
-      add_sprite @enemies, sp
+      # 敵スプライトを物理エンジンに登録する
+      add_sprite(sp)
+      # 敵スプライトを配列にも追加する
+      @enemies.push(sp)
     }
   end
 
@@ -163,7 +164,7 @@ class Game
       sp.pos     = pos
       # y 方向の速度をマイナスにすることで上方向に飛んでいく
       sp.vy      = -speed
-      # 物理演算対象とする
+      # 物理演算で動けるスプライトにする
       sp.dynamic = true
       # 他の物体と衝突してもすり抜けるようにする
       sp.sensor  = true
@@ -171,10 +172,14 @@ class Game
       sp.contact do |other|
         # 衝突相手が敵配列に含まれていなければ（敵でなければ）なにもしない
         next unless @enemies.include?(other)
-        # （衝突相手が敵なので）弾スプライトを物理エンジンと配列から削除する
-        remove_sprite(@bullets, sp)
-        # 敵スプライトも物理エンジンと配列から削除する
-        remove_sprite(@enemies, other)
+        # （衝突相手が敵なので）弾スプライトを物理エンジンから削除する
+        remove_sprite(sp)
+        # 弾スプライトを配列からも削除する
+        @bullets.delete(sp)
+        # 敵スプライトも物理エンジンから削除する
+        remove_sprite(other)
+        # 敵スプライトを配列から削除する
+        @enemies.delete(other)
         # スコアを更新
         @score += 10
         # 1番目のサウンドを 30% の音量で再生
@@ -184,14 +189,18 @@ class Game
       set_interval(1, id: sp.object_id) do
         # y 座標が画面外なら
         if sp.y < -10
-          # 弾スプライトを物理エンジンと配列から削除する
-          remove_sprite(@bullets, sp)
+          # 弾スプライトを物理エンジンから削除する
+          remove_sprite(sp)
+          # 弾スプライトを配列からも削除する
+          @bullets.delete(sp)
           # タイマーを削除
           clear_interval(sp.object_id)
         end
       end
-      # 弾スプライトを物理エンジンに登録し、配列にも追加する
-      add_sprite(@bullets, sp)
+      # 弾スプライトを物理エンジンに登録する
+      add_sprite(sp)
+      # 弾スプライトを配列にも追加する
+      @bullets.push(sp)
       # 0番目のサウンドを 30% の音量で再生
       project.sounds[0].play(gain: 0.5)
     }
