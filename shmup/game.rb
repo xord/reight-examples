@@ -134,8 +134,12 @@ class Game
       sp.dynamic = true
       # スピードをランダムにする
       speed      = rand(20..30)
-      # x 方向はランダム、y 方向は下に向けた速度を設定する
-      sp.vel     = createVector([-1, 1].sample, 1) * speed
+      # 左右方向はランダムにする
+      dirx       = [-1, 1].sample
+      # y 方向は下向き
+      diry       = 1
+      # 方向の単位ベクトルにスピードを掛けて速度を設定する
+      sp.vel     = createVector(dirx, diry).noramlize * speed
       # 敵スプライトが何かを衝突したら呼ばれる
       sp.contact do |other|
         # 衝突した相手がプレイヤースプライトなら？
