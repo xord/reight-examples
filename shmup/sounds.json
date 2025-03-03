@@ -23,90 +23,63 @@
     ]
   },
   {
-    "bpm": 480,
+    "bpm": 180,
     "sequence": [
       [
         {
-          "index": 43,
-          "tone": 3
+          "index": 60,
+          "tone": 6
         }
       ],
       [
         {
-          "index": 48,
-          "tone": 3
+          "index": 44,
+          "tone": 6
         }
       ],
       [
         {
-          "index": 35,
-          "tone": 3
+          "index": 47,
+          "tone": 6
         }
       ],
       [
         {
-          "index": 38,
-          "tone": 3
-        },
-        {
-          "index": 20,
-          "tone": 5
+          "index": 40,
+          "tone": 6
         }
       ],
       [
         {
-          "index": 30,
-          "tone": 3
-        },
-        {
-          "index": 20,
-          "tone": 5
-        }
-      ],
-      [
-        {
-          "index": 27,
-          "tone": 3
-        },
-        {
-          "index": 20,
-          "tone": 5
-        }
-      ],
-      [
-        {
-          "index": 27,
-          "tone": 3
-        },
-        {
-          "index": 20,
-          "tone": 5
+          "index": 22,
+          "tone": 6
         }
       ],
       [
         {
           "index": 20,
-          "tone": 5
+          "tone": 6
         }
       ],
       [
         {
           "index": 20,
-          "tone": 5
+          "tone": 6
         }
-      ],
-      [
-        {
-          "index": 20,
-          "tone": 5
-        }
-      ],
+      ]
+    ]
+  },
+  {
+    "bpm": 120,
+    "sequence": [
       [
 
-      ],
-      [
-
-      ],
+      ]
+    ]
+  },
+  {
+    "bpm": 120,
+    "sequence": [
       [
 
       ]

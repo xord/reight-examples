@@ -78,29 +78,36 @@ class Game
 
   def stage()
     # ステージ用のマップデータからスプライトを生成
-    @stage ||= project.maps.first.sprites
+    @stage ||= project.maps[0].sprites
   end
 
+  # プレイヤースプライト
   def player()
-    # スプライト画像から位置と大きさを指定してスプライトを生成
-    @player ||= project.chips.at(0, 0, 8, 8).sprite.tap do |sp|
+    # スプライトエディターの画像から位置と大きさを指定してスプライトを生成
+    # 初回呼び出し時のみプレイヤースプライトを生成して保持する
+    # 次回呼び出しからは保持している生成済みのインスタンスを返す
+    @player ||= project.chips.at(0, 0, 8, 8).to_sprite.tap do |sp|
+      # インスタンス生成する初回のみ初期化処理を実行
       # スプライトの初期位置を指定
       sp.x, sp.y = 100, 50
       # 物理演算で動けるスプライトにする
       sp.dynamic = true
       # スプライトが他のスプライトと衝突した際に呼ばれる
-      sp.contact do |o|
+      sp.contact do |other|
         # 衝突した相手を、スプライト画像の位置をもとに判別
-        case [o.ox, o.oy] # ox, oy は offsetx, offsety
-        when [8, 32]
-          # 相手がコインならコインを消す
-          stage.delete o
-          remove_sprite o
+        case [other.ox, other.oy] # ox, oy は offsetx, offsety
+        when [8, 32] # 相手がコインなら
+          # コインを配列から消す
+          stage.delete(other)
+          # コインスプライトを物理エンジンからも削除する
+          remove_sprite(other)
           # 1番目のサウンドを再生する
           project.sounds[1].play
-        when [0, 32]
-          # 相手がトゲなら、弾かれるようにプライヤーの速度ベクトルを更新
-          sp.vel    = (sp.pos - o.pos).dup.normalize * 200
+        when [0, 32] # 相手がトゲなら
+          # トゲからプレイヤー向きの単位ベクトルを作る
+          dir       = (sp.pos - other.pos).normalize
+          # 弾かれるようにプライヤーの速度ベクトルを更新
+          sp.vel    = dir * 200
           # 画面を揺らす
           @shake    = 5
           # ゲームオーバーフラグを立てる
@@ -109,10 +116,12 @@ class Game
           project.sounds[2].play
         end
       end
+      # アニメーションのフレーム用カウンター変数
       count = 0
-      # 0.5秒単位で繰り返す
+      # 0.5秒ごとに繰り返す
       set_interval(0.5) do
-        # スプライトの画像の位置（ox -> offset x）を変更しアニメーションさせる
+        # スプライトの画像の参照位置（ox は offset x の略）を
+        # 交互に 0 と 24 になるようにしてアニメーションさせる
         sp.ox = (count += 1) % 2 == 0 ? 0 : 24
       end
     end
