@@ -1,0 +1,246 @@
+[
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 84,
+          "tone": 1
+        }
+      ],
+      [
+        {
+          "index": 91,
+          "tone": 1
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 46,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 42,
+          "tone": 2
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 36,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 41,
+          "tone": 6
+        },
+        {
+          "index": 73,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 31,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 35,
+          "tone": 6
+        },
+        {
+          "index": 59,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 62,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 42,
+          "tone": 6
+        },
+        {
+          "index": 45,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 57,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 48,
+          "tone": 6
+        },
+        {
+          "index": 37,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 34,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 25,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 42,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 29,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 39,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 25,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 29,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 23,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 17,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 13,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 10,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 7,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 5,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 3,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 3,
+          "tone": 6
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 240,
+    "sequence": [
+      [
+        {
+          "index": 48,
+          "tone": 1
+        },
+        {
+          "index": 113,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 50,
+          "tone": 1
+        },
+        {
+          "index": 91,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 43,
+          "tone": 1
+        },
+        {
+          "index": 85,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 48,
+          "tone": 1
+        },
+        {
+          "index": 49,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 44,
+          "tone": 6
+        }
+      ]
+    ]
+  }
+]
