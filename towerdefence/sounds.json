@@ -4,95 +4,55 @@
     "sequence": [
       [
         {
-          "index": 58,
-          "tone": 1
-        },
-        {
-          "index": 47,
-          "tone": 4
-        }
-      ],
-      [
-        {
-          "index": 61,
-          "tone": 1
-        },
-        {
-          "index": 55,
-          "tone": 4
-        }
-      ],
-      [
-
-      ]
-    ]
-  },
-  {
-    "bpm": 480,
-    "sequence": [
-      [
-        {
-          "index": 70,
-          "tone": 4
-        },
-        {
-          "index": 57,
-          "tone": 3
-        }
-      ],
-      [
-        {
-          "index": 48,
-          "tone": 4
-        },
-        {
-          "index": 51,
-          "tone": 3
-        }
-      ],
-      [
-        {
-          "index": 77,
-          "tone": 4
-        },
-        {
-          "index": 70,
-          "tone": 3
-        }
-      ],
-      [
-        {
-          "index": 66,
-          "tone": 4
-        },
-        {
-          "index": 63,
-          "tone": 3
-        }
-      ]
-    ]
-  },
-  {
-    "bpm": 480,
-    "sequence": [
-      [
-        {
-          "index": 64,
+          "index": 42,
           "tone": 6
         },
         {
-          "index": 69,
-          "tone": 4
-        },
-        {
-          "index": 29,
+          "index": 54,
           "tone": 2
         }
       ],
       [
         {
-          "index": 65,
-          "tone": 4
+          "index": 46,
+          "tone": 6
+        },
+        {
+          "index": 52,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 35,
+          "tone": 6
+        },
+        {
+          "index": 60,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 40,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 31,
+          "tone": 6
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 480,
+    "sequence": [
+      [
+        {
+          "index": 23,
+          "tone": 6
         },
         {
           "index": 35,
@@ -101,22 +61,18 @@
       ],
       [
         {
-          "index": 67,
+          "index": 17,
           "tone": 6
         },
         {
-          "index": 78,
-          "tone": 4
-        },
-        {
-          "index": 26,
+          "index": 35,
           "tone": 2
         }
       ],
       [
         {
-          "index": 49,
-          "tone": 4
+          "index": 14,
+          "tone": 6
         },
         {
           "index": 31,
@@ -125,16 +81,170 @@
       ],
       [
         {
-          "index": 61,
+          "index": 30,
+          "tone": 2
+        },
+        {
+          "index": 11,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 15,
           "tone": 6
         },
         {
-          "index": 65,
-          "tone": 4
+          "index": 27,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 19,
+          "tone": 6
         },
         {
-          "index": 28,
+          "index": 24,
           "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 20,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 23,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 20,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 21,
+          "tone": 6
+        },
+        {
+          "index": 18,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 17,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 10,
+          "tone": 6
+        }
+      ],
+      [
+
+      ],
+      [
+
+      ],
+      [
+
+      ],
+      [
+
+      ],
+      [
+
+      ],
+      [
+
+      ],
+      [
+
+      ]
+    ]
+  },
+  {
+    "bpm": 240,
+    "sequence": [
+      [
+        {
+          "index": 56,
+          "tone": 6
+        },
+        {
+          "index": 63,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 71,
+          "tone": 6
+        },
+        {
+          "index": 58,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 81,
+          "tone": 6
+        },
+        {
+          "index": 60,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 87,
+          "tone": 6
+        },
+        {
+          "index": 55,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 87,
+          "tone": 6
+        },
+        {
+          "index": 54,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 83,
+          "tone": 6
+        },
+        {
+          "index": 52,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 65,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 43,
+          "tone": 6
         }
       ]
     ]
