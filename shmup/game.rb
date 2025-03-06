@@ -139,7 +139,7 @@ class Game
       # y 方向は下向き
       diry       = 1
       # 方向の単位ベクトルにスピードを掛けて速度を設定する
-      sp.vel     = createVector(dirx, diry).noramlize * speed
+      sp.vel     = createVector(dirx, diry).normalize * speed
       # 敵スプライトが何かを衝突したら呼ばれる
       sp.contact do |other|
         # 衝突した相手がプレイヤースプライトなら？
