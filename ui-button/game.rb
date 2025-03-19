@@ -1,5 +1,5 @@
 class Button
-  def initialize(x, y, w, h, label, &clicked)
+  def initialize(x, y, w, h, label:, &clicked)
     super()
     @x, @y, @w, @h, @label, @clicked = x, y, w, h, label, clicked
   end
@@ -46,13 +46,14 @@ class Button
   end
 end
 
+
 class Game
   def initialize()
-    @button1 = Button.new 10, 10, 100, 20, 'Button1' do |button|
-      p "#{button.label} is clicked!"
+    @button1 = Button.new 10, 10, 100, 20, label: 'Button1' do |button|
+      puts "#{button.label} is clicked!"
     end
-    @button2 = Button.new 10, 40, 100, 20, 'Button2' do |button|
-      p "#{button.label} is clicked!"
+    @button2 = Button.new 10, 40, 100, 20, label: 'Button2' do |button|
+      puts "#{button.label} is clicked!"
     end
     add_sprite @button1.sprite
     add_sprite @button2.sprite
@@ -63,6 +64,7 @@ class Game
     sprite @button1.sprite, @button2.sprite
   end
 end
+
 
 setup {$game = Game.new}
 draw  {$game&.draw}
