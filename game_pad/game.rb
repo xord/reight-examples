@@ -16,7 +16,8 @@ class Game
     text(@key_code.to_s, 0, 0, width / 2, height / 2)
   end
 
-  def key_down(key_code)
+
+  def key_pressed(key_code)
     @key_code = key_code
   end
 end
@@ -30,5 +31,5 @@ draw do
 end
 
 key_pressed do
-  $game&.key_down key_code
+  $game&.key_pressed key_code
 end
