@@ -6,13 +6,17 @@ class Game
     # 画面を揺らす量
     @shake = 0
 
-    # 全スプライトを追加して物理演算処理用に登録しておく
-    [*stage, player].each do
-      add_sprite(_1)
-    end
+    size width / 2, height / 2
 
-    # 重力を (x, y) で設定
-    gravity(0, 500)
+    set_timeout do
+      # 全スプライトを追加して物理演算処理用に登録しておく
+      [*stage, player].each do
+        add_sprite(_1)
+      end
+
+      # 重力を (x, y) で設定
+      gravity(0, 500)
+    end
   end
 
   # 描画前にゲームの状態を更新する
@@ -33,11 +37,11 @@ class Game
 
   # 秒間60回呼ばれるのでゲーム画面を描画する
   def draw()
+    ox, oy = player.x - width / 2, 0
+    screenOffset ox, oy
+
     # 背景を黒でクリア
     background(0)
-
-    # 画面を縦横それぞれ2倍に拡大する
-    scale(2, 2)
 
     # 画面を揺らす
     if @shake != 0
@@ -48,7 +52,7 @@ class Game
     # 座標変換を do-end 後に復帰する
     push do
       # プレイヤーの座標に合わせてX方向の描画位置をずらす
-      translate(width / 4 - player.x, 0)
+      translate(-ox, -oy)
       # ステージのスプライト、プレイヤーの順に描画する
       sprite(*stage, player)
     end

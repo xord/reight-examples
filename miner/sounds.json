@@ -1,0 +1,75 @@
+[
+  {
+    "bpm": 360,
+    "sequence": [
+      [
+        {
+          "index": 89,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 96,
+          "tone": 3
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 240,
+    "sequence": [
+      [
+        {
+          "index": 72,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 60,
+          "tone": 6
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 360,
+    "sequence": [
+      [
+        {
+          "index": 73,
+          "tone": 1
+        },
+        {
+          "index": 74,
+          "tone": 5
+        },
+        {
+          "index": 48,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 72,
+          "tone": 5
+        },
+        {
+          "index": 60,
+          "tone": 1
+        },
+        {
+          "index": 48,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 48,
+          "tone": 6
+        }
+      ]
+    ]
+  }
+]

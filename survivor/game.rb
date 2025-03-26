@@ -18,9 +18,12 @@ class Game
   end
 
   def draw()
+    ox, oy = player.x - width / 2, player.y - height / 2
+    screenOffset ox, oy
+
     background 0
     push do
-      translate -(player.x - width / 2), -(player.y - height / 2)
+      translate -ox, -oy
       fill 255, 32
       sprite player_sensor
       fill 255
