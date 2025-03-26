@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# ゲームを実装したクラス
 class Game
   def initialize
+    set_title 'Key Event Check'
     @key_code = 'Press any key'
   end
 
@@ -11,11 +11,10 @@ class Game
     scale(2, 2)
 
     fill(255, 255, 255)
-    text_size(32)
+    text_size(15)
     text_align(CENTER, CENTER)
     text(@key_code.to_s, 0, 0, width / 2, height / 2)
   end
-
 
   def key_pressed(key_code)
     @key_code = key_code
