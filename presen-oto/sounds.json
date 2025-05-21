@@ -158,13 +158,95 @@
     "bpm": 400,
     "sequence": [
       [
-
+        {
+          "index": 64,
+          "tone": 6
+        },
+        {
+          "index": 46,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 58,
+          "tone": 6
+        },
+        {
+          "index": 37,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 46,
+          "tone": 6
+        },
+        {
+          "index": 30,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 32,
+          "tone": 6
+        },
+        {
+          "index": 27,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 29,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 24,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 22,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 21,
+          "tone": 6
+        }
+      ],
+      [
+        {
+          "index": 20,
+          "tone": 6
+        }
       ]
     ]
   },
   {
-    "bpm": 120,
+    "bpm": 240,
     "sequence": [
+      [
+        {
+          "index": 48,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 60,
+          "tone": 0
+        }
+      ],
+      [
+
+      ],
       [
 
       ]
