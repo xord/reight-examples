@@ -3,6 +3,7 @@
 class Room
   def initialize(xi, yi)
     @xindex, @yindex = xi, yi
+    @texts, @images  = [], []
   end
 
   attr_reader :xindex, :yindex
@@ -16,8 +17,13 @@ class Room
   end
 
   def t(x, y, str:, size: 14, center: false)
-    @texts ||= []
     @texts.push [str, x, y, size, center]
+  end
+
+  def i(img, x, y, w = nil, h = nil)
+    w ||= img.width
+    h ||= img.height
+    @images.push [img, x, y, w, h]
   end
 
   def draw()
@@ -31,11 +37,164 @@ class Room
         text str, rx + x, ry + y
       end
     end
+    @images.each do |(img, x, y, w, h)|
+      image img, room_x + x, room_y + y, w, h
+    end
   end
 
   def note_pressed(note, frequency, velocity) = nil
   def note_released(note)                     = nil
   def control_change(index, value)            = nil
+end
+
+class StepSequencer < Room
+
+  B = Beeps
+
+  NROW, NCOL = 4, 16
+
+  def initialize(...)
+    super
+    update_layout
+  end
+
+  def osc(type, freq = 440)
+    B::Oscillator.new(type, freq: freq)
+  end
+
+  def const(value, freq: 1, amp: 1)
+    B::Oscillator.new(offset: value, freq: freq, gain: amp)
+  end
+
+  def env(a, d, s = 0, r = 0)
+    B::Envelope.new(a, d, s, r) {note_on}
+  end
+
+  def gain(gain, velocity = 1)
+    B::Gain.new gain * velocity
+  end
+
+  def mix(*inputs)
+    B::Mixer.new(*inputs)
+  end
+
+  def kick(velocity: 1, gain: 1, freq: 40, decay: 0.5, **)
+    triangle = osc(:triangle, const(freq) >> env(0, decay)) >> env(0, decay)
+    noise    = osc(:noise,    const(1000) >> env(0, 0.3)) >> env(0, 0.3) >> gain(0.01)
+    #mix(triangle, noise) >> gain(gain, velocity) >> gain(0.2)
+    triangle >> env(0.01, 0, 1, 0) >> gain(gain, velocity) >> gain(0.2)
+  end
+
+  def draw()
+    sprite play_or_stop, bpm, *toggles
+  end
+
+  def control_change(index, value)
+    case index
+    when 3 then bpm[:value] = map(value, 0.0, 1.0, 60, 240).to_i
+    end
+  end
+
+  def play()
+    unit      = 60.0 / bpm[:value]
+    duration  = unit * NCOL
+    sequencer = B::Sequencer.new.tap do |seq|
+      each_toggle do |sp, x, y|
+        seq.add kick, x * unit, 1 if sp[:on]
+      end
+    end
+    set_timeout duration, id: :play do
+      play
+    end
+    @playing = B::Sound.new(sequencer, duration).play
+  end
+
+  def playing?
+    @playing
+  end
+
+  def stop()
+    @playing&.stop
+    @playing = nil
+    clear_timeout :play
+  end
+
+  def play_or_stop()
+    @play_or_stop ||= Sprite.new(physics: false).tap do |sp|
+      add_sprite sp
+      sp.draw do
+        fill 255
+        rect 0, 0, sp.w, sp.h, 3
+
+        fill 0
+        text_align CENTER, CENTER
+        text (playing? ? 'Stop' : 'Play'), 0, 0, sp.w, sp.h
+      end
+      sp.mouse_clicked do
+        playing? ? stop : play
+      end
+    end
+  end
+
+  def bpm()
+    @bpm ||= Sprite.new(physics: false).tap do |sp|
+      add_sprite sp
+      sp[:value] = 120
+      sp.draw do
+        fill 255
+        rect 0, 0, sp.w, sp.h, 3
+
+        fill 0
+        text_align CENTER, CENTER
+        text "BPM: #{sp[:value]}", 0, 0, sp.w, sp.h
+      end
+    end
+  end
+
+  def toggles()
+    @toggles ||= (0...NROW).to_a.product((0...NCOL).to_a).map {|(y, x)|
+      Sprite.new(physics: false).tap do |sp|
+        add_sprite sp
+        sp[:on] = y == 0
+        sp.draw do
+          fill (x / 4 % 2 == 0) ? 255 : 150
+          rect 0, 0, sp.w, sp.h, 1
+          if sp[:on]
+            fill 0
+            text_align CENTER, CENTER
+            text 'X', 0, 0, sp.w, sp.h
+          end
+        end
+        sp.mouse_clicked do
+          sp[:on] = !sp[:on]
+        end
+      end
+    }
+  end
+
+  def each_toggle(&block)
+    toggles.each.with_index do |sp, i|
+      block.call sp, i % NCOL, i / NCOL
+    end
+  end
+
+  def update_layout()
+    padding, margin = 32, 4
+    play_or_stop.tap do |sp|
+      sp.w, sp.h  = 48, 20
+      sp.x = sp.y = padding
+    end
+    bpm.tap do |sp|
+      base       = play_or_stop
+      sp.w, sp.h = 64, 16
+      sp.x, sp.y = base.right + margin, base.bottom - sp.h
+    end
+
+    each_toggle do |sp, x, y|
+      sp.w = sp.h = 16
+      sp.x, sp.y  = 32 + x * 20, 100 + y * 20
+    end
+  end
 end
 
 class Synth < Room
@@ -48,36 +207,41 @@ class Synth < Room
     update_layout
   end
 
-  def osc(type, freq, duty, gain)
-    B::Oscillator.new type, freq: freq, duty: duty, gain: gain
-  end
-
-  def gain(value)
-    B::Gain.new value
-  end
-
-  def analyser()
-    @analyser = B::Analyser.new
-  end
-
   def note2freq(note)
     a4 = 69
 		440 * 2.0 ** ((note - a4) / 12.0)
   end
 
   def play(note, frequency, velocity)
-    freq0 = frequency
-    freq1 = note2freq note + osc_detune(1)[:value] + osc_octave(1)[:value].to_i * 12
-    freq2 = note2freq note + osc_detune(2)[:value] + osc_octave(2)[:value].to_i * 12
-    osc0  = osc osc_type(0)[:type], freq0, osc_duty(0)[:value], osc_gain(0)[:value]
-    osc1  = osc osc_type(1)[:type], freq1, 0.5,                 osc_gain(1)[:value]
-    osc2  = osc osc_type(2)[:type], freq2, 0.5,                 osc_gain(2)[:value]
-    mix   = B::Mixer.new osc0, osc1, osc2
-    lpf   = B::LowPass.new lowpass[:value]
-    src   = lpf.cutoff >= 10000 ? mix : (mix >> lpf)
-    env   = B::Envelope.new(attack[:value], decay[:value], sustain[:value], release[:value]) {note_on}
-    gain  = B::Gain.new 0.5 * volume[:value] * velocity
-    B::Sound.new(src >> env >> gain >> analyser).play
+    osc0 = B::Oscillator.new(
+                   osc_type(0)[:type],
+             duty: osc_duty(0)[:value],
+             gain: osc_gain(0)[:value],
+             freq: frequency)
+    osc1 = B::Oscillator.new(
+                   osc_type(1)[:type],
+             gain: osc_gain(1)[:value],
+             freq: note2freq(
+                     note +
+                     osc_detune(1)[:value] +
+                     osc_octave(1)[:value].to_i * 12))
+    osc2 = B::Oscillator.new(
+                   osc_type(2)[:type],
+             gain: osc_gain(2)[:value],
+             freq: note2freq(
+                     note +
+                     osc_detune(2)[:value] +
+                     osc_octave(2)[:value].to_i * 12))
+    mix  = B::Mixer.new osc0, osc1, osc2
+    lpf  = B::LowPass.new lowpass[:value]
+    src  = lpf.cutoff >= 10000 ? mix : (mix >> lpf)
+    env  = B::Envelope.new(
+             attack[:value],
+             decay[:value],
+             sustain[:value],
+             release[:value]) {note_on}
+    gain = B::Gain.new 0.5 * velocity * volume[:value]
+    B::Sound.new(src >> env >> gain).play
     env
   end
 
@@ -88,12 +252,6 @@ class Synth < Room
     sprite volume, lowpass
     sprite attack, decay, sustain, release
     sprite keyboard
-
-    stroke 255
-    no_fill
-    @analyser&.each_spectrum&.with_index do |val, x|
-      rect 250 + x, 100 + 100 * val, 1, 1
-    end
   end
 
   def note_pressed(note, freq, vel)
@@ -234,7 +392,7 @@ class Synth < Room
   def release()
     @release ||= Sprite.new(physics: false).tap do |sp|
       add_sprite sp
-      setup_value_control sp, 'R', 1
+      setup_value_control sp, 'R', 0
     end
   end
 
@@ -356,17 +514,41 @@ end
 
 def define_rooms()
   rooms = []
-  rooms.push Synth.new(0, 0)
-  rooms.push Room.new(0, 1).tap {|r|
+  #rooms.push StepSequencer.new(0, 0)
+  rooms.push Room.new(0, 0).tap {|r|
     r.t 0,  80, center: true, size: 16, str: '2D ゲームエンジンを MIDI 入力に対応させたので'
     r.t 0, 110, center: true, size: 16, str: 'シンセサイザーを作りたい話'
     r.t 0, 180, center: true, size: 10, str: '@tokujiros'
   }
   rooms.push Room.new(1, 0).tap {|r|
-    r.t 30,  50, str: '2D レトロゲームエンジン Reight (R8)'
-    r.t 30,  80, str: ' - ドット絵の低解像度ゲームが簡単に作れる'
-    r.t 30, 110, str: ' - 8ビットサウンドも簡単に鳴らせる'
+    r.t 30,  40, size: 16, str: '自己紹介'
+    r.i loadImage(project.project_dir + '/face.png'), 40, 60, 64, 64
+    r.t  40, 154, size: 20, str: '@tokujiros'
+    r.t  40, 180, size: 12, str: 'x.com/tokujiros'
+    r.t  40, 200, size: 12, str: 'github.com/xord'
+    r.t 150,  70, str: '好きな言語は Ruby と C++'
+    r.t 150, 100, str: '最近はサウンド周りの実装が楽しい'
   }
+  rooms.push Room.new(2, 0).tap {|r|
+    r.t 30,  40, size: 16, str: '2D レトロゲームエンジン Reight (R8)'
+    r.t 30,  70, str: '  - ドット絵の低解像度ゲームが簡単に作れる'
+    r.t 30, 100, str: '  - 8ビットサウンドも簡単に鳴らせる'
+  }
+  rooms.push Room.new(3, 0).tap {|r|
+    r.t 30,  40, str: 'サウンド周りの実装'
+    r.t 30, 70, str: '  - サウンドの再生 OpenAL'
+    r.t 30, 100, str: '  - 音声信号処理 Synthesis ToolKit'
+    r.t 30, 130, str: '  - Processor を繋げて信号処理を作成'
+    r.t 30, 150, str: '    - Generator (Oscillator, Sequencer, FileIn, MicIn)'
+    r.t 30, 170, str: '    - Filter (Gain, Mixer, Envelope, LPF, HPF, ...)'
+    r.t 30, 200, str: '  - https://github.com/xord/beeps'
+  }
+  rooms.push Room.new(4, 0).tap {|r|
+    r.t 30,  40, str: '利用例'
+    r.t 30,  70, str: ' - o, e, g = Oscillator.new, Envelope.new, Gain.new'
+    r.t 30, 100, str: ' - Sound.new(o >> e >> g).play'
+  }
+  rooms.push Synth.new(5, 0)
 end
 
 class Game
