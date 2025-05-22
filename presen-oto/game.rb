@@ -571,7 +571,7 @@ class DrumRoom < Room
         sp.draw {
           fill 150 + 100 * sp[:color]
           sp[:color] *= 0.9
-          rect 0, 0, sp.w, sp.h, 5
+          rect 0, 0, sp.w, sp.h, 2
         }
         def sp.play(velocity = 1)
           self[:sound]&.play gain: velocity
@@ -603,8 +603,7 @@ class WarpRoom < Room
         add_sprite sp
         sp.sensor = true
         sp.contact do |o|
-          o.x,  o.y  = width * i + width / 2, height / 2
-          o.vx, o.vy = 0, -200
+          o.warp i
         end
         sp.draw do |&draw|
           translate  -sp.w,  -sp.h
@@ -717,6 +716,9 @@ def define_rooms()
     r.t 30, 190,           str: '- ゼロからの、レトロゲームエンジンの作り方'
     r.t 30, 204, size: 12, str: '    https://tinyurl.com/3dbzd6aj'
   }
+  rooms.push Room.new(8, 0).tap {|r|
+    r.t 0,  100, center: true, size: 16, str: 'O W A R I'
+  }
   rooms.push WarpRoom.new(0, 1)
 end
 
@@ -798,8 +800,8 @@ class Game
       draw_rooms
       draw_sprites
     end
-    text_size 8
-    text frame_rate.to_i, width - 20, 32
+    #text_size 8
+    #text frame_rate.to_i, width - 20, 32
   end
 
   def key_down(code)
@@ -816,6 +818,16 @@ class Game
     when *bomb_keys
       dir = player[:dir] < 0 ? -1 : 1
       place_bomb player.center
+    when :'1' then player.warp 0
+    when :'2' then player.warp 1
+    when :'3' then player.warp 2
+    when :'4' then player.warp 3
+    when :'5' then player.warp 4
+    when :'6' then player.warp 5
+    when :'7' then player.warp 6
+    when :'8' then player.warp 7
+    when :'9' then player.warp 8
+    when :'0' then player.warp 9
     end
   end
 
@@ -880,6 +892,10 @@ class Game
           end
         anim += 1
       }
+      def sp.warp(page)
+        self. x, self. y = $game.width * page + $game.width / 2, $game.height / 2
+        self.vx, self.vy = 0, -200
+      end
     end
   end
 
