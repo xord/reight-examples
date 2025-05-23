@@ -47,156 +47,6 @@ class Room
   def control_change(index, value)            = nil
 end
 
-class StepSequencerRoom < Room
-
-  B = Beeps
-
-  NROW, NCOL = 4, 16
-
-  def initialize(...)
-    super
-    update_layout
-  end
-
-  def osc(type, freq = 440)
-    B::Oscillator.new(type, freq: freq)
-  end
-
-  def const(value, freq: 1, amp: 1)
-    B::Oscillator.new(offset: value, freq: freq, gain: amp)
-  end
-
-  def env(a, d, s = 0, r = 0)
-    B::Envelope.new(a, d, s, r) {note_on}
-  end
-
-  def gain(gain, velocity = 1)
-    B::Gain.new gain * velocity
-  end
-
-  def mix(*inputs)
-    B::Mixer.new(*inputs)
-  end
-
-  def kick(velocity: 1, gain: 1, freq: 40, decay: 0.5, **)
-    triangle = osc(:triangle, const(freq) >> env(0, decay)) >> env(0, decay)
-    noise    = osc(:noise,    const(1000) >> env(0, 0.3)) >> env(0, 0.3) >> gain(0.01)
-    #mix(triangle, noise) >> gain(gain, velocity) >> gain(0.2)
-    triangle >> env(0.01, 0, 1, 0) >> gain(gain, velocity) >> gain(0.2)
-  end
-
-  def draw()
-    sprite play_or_stop, bpm, *toggles
-  end
-
-  def control_change(index, value)
-    case index
-    when 3 then bpm[:value] = map(value, 0.0, 1.0, 60, 240).to_i
-    end
-  end
-
-  def play()
-    unit      = 60.0 / bpm[:value]
-    duration  = unit * NCOL
-    sequencer = B::Sequencer.new.tap do |seq|
-      each_toggle do |sp, x, y|
-        seq.add kick, x * unit, 1 if sp[:on]
-      end
-    end
-    set_timeout duration, id: :play do
-      play
-    end
-    @playing = B::Sound.new(sequencer, duration).play
-  end
-
-  def playing?
-    @playing
-  end
-
-  def stop()
-    @playing&.stop
-    @playing = nil
-    clear_timeout :play
-  end
-
-  def play_or_stop()
-    @play_or_stop ||= Sprite.new(physics: false).tap do |sp|
-      add_sprite sp
-      sp.draw do
-        fill 255
-        rect 0, 0, sp.w, sp.h, 3
-
-        fill 0
-        text_align CENTER, CENTER
-        text (playing? ? 'Stop' : 'Play'), 0, 0, sp.w, sp.h
-      end
-      sp.mouse_clicked do
-        playing? ? stop : play
-      end
-    end
-  end
-
-  def bpm()
-    @bpm ||= Sprite.new(physics: false).tap do |sp|
-      add_sprite sp
-      sp[:value] = 120
-      sp.draw do
-        fill 255
-        rect 0, 0, sp.w, sp.h, 3
-
-        fill 0
-        text_align CENTER, CENTER
-        text "BPM: #{sp[:value]}", 0, 0, sp.w, sp.h
-      end
-    end
-  end
-
-  def toggles()
-    @toggles ||= (0...NROW).to_a.product((0...NCOL).to_a).map {|(y, x)|
-      Sprite.new(physics: false).tap do |sp|
-        add_sprite sp
-        sp[:on] = y == 0
-        sp.draw do
-          fill (x / 4 % 2 == 0) ? 255 : 150
-          rect 0, 0, sp.w, sp.h, 1
-          if sp[:on]
-            fill 0
-            text_align CENTER, CENTER
-            text 'X', 0, 0, sp.w, sp.h
-          end
-        end
-        sp.mouse_clicked do
-          sp[:on] = !sp[:on]
-        end
-      end
-    }
-  end
-
-  def each_toggle(&block)
-    toggles.each.with_index do |sp, i|
-      block.call sp, i % NCOL, i / NCOL
-    end
-  end
-
-  def update_layout()
-    padding, margin = 32, 4
-    play_or_stop.tap do |sp|
-      sp.w, sp.h  = 48, 20
-      sp.x = sp.y = padding
-    end
-    bpm.tap do |sp|
-      base       = play_or_stop
-      sp.w, sp.h = 64, 16
-      sp.x, sp.y = base.right + margin, base.bottom - sp.h
-    end
-
-    each_toggle do |sp, x, y|
-      sp.w = sp.h = 16
-      sp.x, sp.y  = 32 + x * 20, 100 + y * 20
-    end
-  end
-end# StepSequencerRoom
-
 class SynthRoom < Room
 
   B = Beeps
@@ -627,7 +477,6 @@ end
 
 def define_rooms()
   rooms = []
-  #rooms.push StepSequencerRoom.new(0, 0)
   rooms.push Room.new(0, 0).tap {|r|
     r.t 0,  80, center: true, size: 16, str: '2D ゲームエンジンを MIDI 入力に対応させたので'
     r.t 0, 110, center: true, size: 16, str: 'シンセサイザーを作りたい話'
@@ -676,35 +525,6 @@ def define_rooms()
     r.t 30, 30,           str: 'シンセサイザーを作ってみた'
     r.t 30, 44, size: 12, str: 'LFO >> Oscillator >> Mixer >> LPF >> Envelope >> Gain'
   }
-=begin
-  rooms.push Room.new(7, 0).tap {|r|
-    r.t 30,  40, str: 'ここまでどうやって実装したか'
-    r.t 30,  70, str: '  - サウンドプログラミングなんも分からんかった'
-    r.t 30, 100, str: '    - オシレーター？ローパスフィルター？'
-    r.t 30, 120, str: '  - ChatGPT に聞きまくって把握'
-    r.t 30, 150, str: '    - 音のプログラミング楽しいに到達'
-    r.t 30, 170, str: '  - まだまだ分からんことばかり'
-    r.t 30, 200, str: '    - 音楽理論とか楽器のこととか'
-  }
-  rooms.push Room.new(8, 0).tap {|r|
-    r.t 0,  80, center: true, size: 16, str: 'サウンドプログラミング'
-    r.t 0, 110, center: true, size: 16, str: '楽しいのでおすすめです'
-  }
-  rooms.push Room.new(7, 0).tap {|r|
-    r.t 30,  40, str: 'ゲームエンジンの現状'
-    r.t 30,  70, str: '  - シンセサイザーが作れる基盤ができた'
-    r.t 30, 100, str: '  - 基本的な音を並べて効果音作成可能'
-    r.t 30, 130, str: '    - サイン波、三角波、のこぎり波、矩形波、ノイズ'
-  }
-  rooms.push Room.new(8, 0).tap {|r|
-    r.t 30,  40, str: 'ゲームエンジンの今後'
-    r.t 30,  70, str: '  - Oscillator や Envelope などを公開するは厳しい'
-    r.t 30, 100, str: '    - 自由度が高すぎて使うのが難しい'
-    r.t 30, 130, str: '  - 音色エディターの追加？'
-    r.t 30, 160, str: '    - シンセサイザーで音色を編集'
-    r.t 30, 190, str: '    - 結局これも難しいので上級者向け？'
-  }
-=end
   rooms.push Room.new(7, 0).tap {|r|
     r.t 30,  40,           str: '参考'
     r.t 30,  70,           str: '- ゲームエンジン'
