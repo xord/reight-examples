@@ -1,5 +1,8 @@
 # Reight Examples
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/xord/reight-examples)
+![License](https://img.shields.io/github/license/xord/reight-examples)
+
 レトロゲームエンジン Reight (R8) のサンプルコード集です。
 
 ## 使い方
