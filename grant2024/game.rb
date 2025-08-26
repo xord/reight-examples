@@ -1,0 +1,499 @@
+# -*- coding: utf-8 -*-
+
+class Room
+  def initialize(game, xi, yi)
+    @game, @xindex, @yindex          = game, xi, yi
+    @texts, @lines, @curves, @images = [], [], [], []
+  end
+
+  attr_reader :xindex, :yindex
+
+  def room_x()
+    width * @xindex
+  end
+
+  def room_y()
+    height * @yindex
+  end
+
+  def t(x, y, font, str:, center: false)
+    @texts.push [str, x, y, font, center]
+  end
+
+  def l(x1, y1, x2, y2, color: nil, weight: 1)
+    @lines.push [x1, y1, x2, y2, color, weight]
+  end
+
+  def c(x1, y1, x2, y2, x3, y3, x4, y4, color: nil, weight: 1)
+    @curves.push [x1, y1, x2, y2, x3, y3, x4, y4, color, weight]
+  end
+
+  def i(x, y, w = nil, h = nil, img:)
+    w ||= img.width
+    h ||= img.height
+    @images.push [img, x, y, w, h]
+  end
+
+  def draw()
+    @font_sizes ||= {
+      @game.regular_10 => 10,
+      @game.regular_12 => 12,
+      @game.bold_10    => 10,
+      @game.bold_12    => 12
+    }
+    rx, ry = room_x, room_y
+    @images.each do |(img, x, y, w, h)|
+      image img, rx + x, ry + y, w, h
+    end
+    no_fill
+    @lines.each do |(x1, y1, x2, y2, color, weight)|
+      stroke(*color)
+      stroke_weight(weight || 1)
+      line rx+x1, ry+y1, rx+x2, ry+y2
+    end
+    @curves.each do |(x1, y1, x2, y2, x3, y3, x4, y4, color, weight)|
+      stroke(*color)
+      stroke_weight(weight || 1)
+      curve rx+x1, ry+y1, rx+x2, ry+y2, rx+x3, ry+y3, rx+x4, ry+y4
+    end
+    fill 255
+    no_stroke
+    @texts.each do |(str, x, y, font, center)|
+      size = @font_sizes[font]
+      text_font font, size
+      text_align center ? CENTER : LEFT
+      if center
+        text str, rx,     ry + y, width, size
+      else
+        draw_colored_text str, rx + x, ry + y
+      end
+    end
+  end
+
+  def draw_colored_text(str, x, y)
+    xx = 0
+    str.split('**').each.with_index do |s, i|
+      fill(*(i % 2 == 0 ? 255 : [243, 186, 3]))
+      text s, x + xx, y
+      xx += text_width s
+    end
+  end
+end
+
+class PlaygroundRoom < Room
+  def initialize(...)
+    super
+    @score = 0
+  end
+
+  def draw
+    super
+    text_font @game.bold_12, 12
+    fill 255
+    text "SCORE: #{@score}", 10, 20
+  end
+end
+
+def define_rooms(game)
+  r10, r12, b10, b12 = game.regular_10, game.regular_12, game.bold_10, game.bold_12
+
+  rooms = []
+  rooms.push Room.new(game, 0, 0).tap {|r|
+    r.t 0,  50, b12, center: true, str: 'P r o c e s s i n g  G e m  ベ ー ス の'
+    r.t 0,  80, b12, center: true, str: '2 D レ ト ロ ゲ ー ム エ ン ジ ン の 開 発'
+    r.t 0, 140, r10, center: true, str: 'Ruby Association Activity Report'
+    r.t 0, 160, r10, center: true, str: '2025 / 8 / 28'
+    r.t 0, 180, r10, center: true, str: '@tokujiros'
+  }
+  rooms.push Room.new(game, 1, 0).tap {|r|
+    r.t 20,  30, b12, str: '全体の流れ'
+    r.t 30,  60, r10, str: '・成果物としてのレトロゲームエンジン **Reight** の紹介'
+    r.t 30,  80, r10, str: '・ゲーム開発の実演'
+    r.t 30, 100, r10, str: '・今後の予定について'
+  }
+  rooms.push Room.new(game, 2, 0).tap {|r|
+    r.t  20,  30, b12, str: '自己紹介'
+    r.i  30,  50, 64, 64, img: loadImage(project.project_dir + '/face.png')
+    r.t  30, 135, r12, str: '@tokujiros'
+    r.t  30, 165, r10, str: 'x.com/tokujiros'
+    r.t  30, 185, r10, str: 'github.com/xord'
+    r.t 140,  40, r10, str: 'テキストエディター作りたい！（約20年前）'
+    r.t 140,  55, r10, str: ' ↓'
+    r.t 140,  70, r10, str: 'GUIライブラリーから作り始める'
+    r.t 140,  85, r10, str: ' ↓'
+    r.t 140, 100, r10, str: 'グラフィックスエンジン自作（OpenGLラッパー）'
+    r.t 140, 115, r10, str: ' ↓'
+    r.t 140, 130, r10, str: 'Processing互換ライブラリー化'
+    r.t 140, 145, r10, str: ' ↓'
+    r.t 140, 160, r10, str: 'オーディオエンジンも自作（OpenALラッパー）'
+    r.t 140, 175, r10, str: ' ↓'
+    r.t 140, 190, r10, str: 'ゲームエンジン化（← いまここ）'
+  }
+  rooms.push Room.new(game, 3, 0).tap {|r|
+    r.t 20,  30, b12, str: 'プロジェクト概要'
+    r.t 30,  55, r10, str: '昨年度採択された「CRuby 用 Processing Gem の、本家 Processing との'
+    r.t 30,  70, r10, str: '互換性向上に向けた取り組み」を基に、その成果物である Processing Gem'
+    r.t 30,  85, r10, str: 'を活用し、**新たに 2Dレトロゲームエンジンを開発しました**。'
+
+    r.t 30, 110, r10, str: 'このゲームエンジンはレトロゲームをターゲットとし、解像度や色数、'
+    r.t 30, 125, r10, str: 'オーディオ関連の仕様に意図的な宣言を設けることで、ゲーム開発の複雑さを'
+    r.t 30, 140, r10, str: '軽減し、初心者でも手軽にゲーム制作を始められる環境を提供します。'
+
+    r.t 30, 165, r10, str: 'Ruby と Processing を基盤とするこのゲームエンジンの開発により、'
+    r.t 30, 180, r10, str: 'Ruby を活用したゲーム制作の幅を広げ、コミュニティの発展に貢献する'
+    r.t 30, 195, r10, str: 'ことを目指しています。'
+  }
+  rooms.push Room.new(game, 4, 0).tap {|r|
+    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 1'
+    r.t 30,  60, r10, str: '・2D ゲームを手軽に作れる**統合開発環境**'
+    r.t 30,  80, r10, str: '　・**スプライト**エディター、**マップ**エディター、**サウンド**エディターなど'
+    r.t 30, 100, r10, str: '・Ruby でゲームを実装可能'
+    r.t 30, 120, r10, str: '・グラフィックス周りは、広く知られた Processing API と互換'
+    r.t 30, 140, r10, str: '　・Processing の学習リソースがほぼそのまま使える'
+    r.t 30, 160, r10, str: '　・2D のゲームやインタラクティブなアプリを作るのに必要十分な機能を持つ'
+    r.t 30, 180, r10, str: '・効果音も手軽に作れて鳴らすのも簡単'
+  }
+  rooms.push Room.new(game, 5, 0).tap {|r|
+    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 2'
+    r.t 30,  60, r10, str: '・ファミコンからスーパーファミコン世代風のゲームが手軽に作れる'
+    r.t 30,  80, r10, str: '　・低解像度グラフィックとピコピコサウンド'
+    r.t 30, 100, r10, str: '・ゲーム制作の敷居が低い'
+    r.t 30, 120, r10, str: '　・色数や解像度などが意図的に制限されており、ゲームデザインそのものに'
+    r.t 30, 140, r10, str: '　　集中できる'
+    r.t 30, 160, r10, str: '　・ゲームを作りやすく、完成させやすい'
+  }
+  rooms.push Room.new(game, 6, 0).tap {|r|
+    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 3'
+    r.t 30,  60, r10, str: '・ゲームエンジン全体も Ruby で実装'
+    r.t 30,  80, r10, str: '・対応プラットフォームは Mac、Windows など'
+    r.t 30, 100, r10, str: '　・gem install reight でインストール可能'
+  }
+  rooms.push PlaygroundRoom.new(game, 7, 0).tap {|r|
+    r.t 20,  30, b12, str: 'ゲーム開発の実演'
+  }
+  rooms.push Room.new(game, 8, 0).tap {|r|
+    r.t 20,  30, b12, str: '今後の予定について'
+    r.t 30,  60, r10, str: '・ゲーム実行環境のブラウザー（WebAssembly）対応'
+    r.t 30,  80, r10, str: '　・ゲームエンジンで制作したゲームを手軽に配布可能に'
+    r.t 30, 100, r10, str: '　・ruby.wasm は Emscripten 版を利用予定'
+    r.t 30, 120, r10, str: '　　・WASI 版は OpenGL に対応していないとのこと'
+    r.t 30, 140, r10, str: '・テキストエディターの搭載'
+    r.t 30, 160, r10, str: '　・現状では、ゲームのソースコード編集は外部テキストエディター利用を'
+    r.t 30, 180, r10, str: '　　前提としているが、将来的にはテキストエディターも搭載したい'
+    r.t 30, 200, r10, str: '　・統合環境内でスクリプトを書き換えたらゲーム実行に即反映など'
+  }
+  rooms.push Room.new(game, 9, 0).tap {|r|
+    r.t 20,  30, b12, str: '参考'
+    r.t 30,  60, r10, str: '- ゲームエンジン'
+    r.t 30,  80, r10, str: '    https://github.com/xord/reight'
+    r.t 30, 100, r10, str: '- ゲームエンジン サンプルゲーム集'
+    r.t 30, 120, r10, str: '    https://github.com/xord/reight-examples'
+    r.t 30, 140, r10, str: '- ゼロからの、レトロゲームエンジンの作り方'
+    r.t 30, 160, r10, str: '    https://tinyurl.com/3dbzd6aj'
+  }
+  rooms.push Room.new(game, 10, 0).tap {|r|
+    r.t 0, 100, b12, center: true, str: 'E O P'
+  }
+=begin
+  rooms.push Room.new(game, 7, 0).tap {|r|
+    r.l 14,16, 14,120, color: [243, 186, 3]
+    r.l 28,16, 28, 90, color: [243, 186, 3]
+    r.l 42,16, 42, 60, color: [243, 186, 3]
+    r.l 56,16, 56, 30, color: [243, 186, 3]
+    r.t 10,  132, r10, str: 'ゲーム実行'
+    r.t 24,  102, r10, str: 'スプライトエディター'
+    r.t 38,  72, r10, str: 'マップエディター'
+    r.t 50,  42, r10, str: 'サウンドエディター'
+    r.t 180, 42, r10, str: '効果音を作成'
+  }
+=end
+end
+
+class Game
+  def initialize()
+    load_fonts
+    @sprites = []
+    @rooms   = define_rooms(self).each.with_object({}) {|room, h|
+      h[[room.xindex, room.yindex]] = room
+    }
+    set_title '【Ruby Association Activity Report 】    Processing Gem ベースの2D レトロゲームエンジンの開発 (tokujiros)'
+    gravity 0, 1000
+  end
+
+  attr_reader :prev_room
+
+  attr_reader :regular_10, :regular_12, :bold_10, :bold_12
+
+  def load_fonts()
+    @regular_10, @regular_12, @bold_10, @bold_12 = %w[10-Regular 12-Regular 10-Bold 12-Bold]
+      .map {|type, size| load_font(project.project_dir + "/PixelMplus#{type}.ttf", smooth: false)}
+  end
+
+  def current_room()
+    index = screen_index
+    room  = @rooms[[index.x.to_i, index.y.to_i]]
+    if room != @current_room
+      @prev_room    = @current_room
+      @current_room = room
+    end
+    room
+  end
+
+  def screen_index()
+    create_vector(
+      (player.x / width) .to_i,
+      (player.y / height).to_i)
+  end
+
+  def shake(size = 20)
+    @shake = size
+  end
+
+  def shake_screen()
+    return if !@shake || @shake <= 0
+    vec = Vector.random2D * @shake
+    translate vec.x, vec.y
+    @shake = @shake > 1 ? @shake * 0.9 : 0
+  end
+
+  def offset_screen()
+    pos    = screen_index
+    pos.x *= width
+    pos.y *= height
+
+    so = screen_offset
+    screen_offset so + (pos - so) * 0.1
+
+    so = screen_offset
+    translate -so.x, -so.y
+  end
+
+  def draw_rooms()
+    prev_room&.draw
+    current_room&.tap do |room|
+      room.draw
+      fill 100
+      text_size 10
+      text "#{screen_index.x.to_i + 1}", room.room_x + width - 20, room.room_y + 20
+    end
+  end
+
+  def draw_sprites()
+    so = screen_offset
+    sprite stage.sprites_at(
+      so.x - 100, so.y - 100, width + 200, height + 200
+    ) {|actives, inactives|
+      actives.each {add_sprite _1}
+      inactives.each {remove_sprite _1}
+    }
+    sprite player, *@sprites
+  end
+
+  def draw()
+    shader background_shader.tap {|sh|
+      sh.set :time, frame_count.to_f / 100.0
+      sh.set :color1, 0.12, 0.12, 0.12,  1.0
+      sh.set :color2, 0.15, 0.15, 0.15, 1.0
+    }
+    rect 0, 0, width, height
+    shader nil
+
+    push do
+      shake_screen
+      offset_screen
+      draw_rooms
+      draw_sprites
+    end
+  end
+
+  def key_down(code)
+    case code
+    when *jump_keys
+      if player[:jump] == 0
+        player.vy = -400
+        player[:jump] += 1
+        project.sounds[0].play gain: 0.3
+      end
+    when *shot_keys
+      dir = player[:dir] < 0 ? -1 : 1
+      shoot player.center, create_vector(dir * 200, 0)
+    when *bomb_keys
+      dir = player[:dir] < 0 ? -1 : 1
+      place_bomb player.center
+    when :'1' then player.warp 0
+    when :'2' then player.warp 1
+    when :'3' then player.warp 2
+    when :'4' then player.warp 3
+    when :'5' then player.warp 4
+    when :'6' then player.warp 5
+    when :'7' then player.warp 6
+    when :'8' then player.warp 7
+    when :'9' then player.warp 8
+    when :'0' then player.warp 9
+    end
+  end
+
+  def   left_keys = [LEFT,  :gamepad_left]
+  def  right_keys = [RIGHT, :gamepad_right]
+  def   jump_keys = [UP,    :gamepad_button_1]
+  def crouch_keys = [DOWN,  :gamepad_down]
+  def   shot_keys = [:z,    :gamepad_button_0]
+  def   bomb_keys = [:x,    :gamepad_button_3]
+
+  def   left_key? =   left_keys.any? {key_is_down _1}
+  def  right_key? =  right_keys.any? {key_is_down _1}
+  def   jump_key? =   jump_keys.any? {key_is_down _1}
+  def crouch_key? = crouch_keys.any? {key_is_down _1}
+  def   shot_key? =   shot_keys.any? {key_is_down _1}
+  def   bomb_key? =   bomb_keys.any? {key_is_down _1}
+
+  def player()
+    @player ||= project.chips.at(0, 8, 8, 8).sprite.tap do |sp|
+      add_sprite sp
+      sp.center  = create_vector width / 2, height - 50
+      sp.dynamic = true
+
+      sp[:dir]  = 1
+      sp[:jump] = 0
+      sp.update {
+        sp.vx -= 20 if  left_key?
+        sp.vx += 20 if right_key?
+        sp.vx *= 0.9
+        sp.vy -= 30 if sp[:jump] > 0 && sp.vy > -100 && jump_key?
+        sp[:dir] = sp.vx if sp.vx != 0
+      }
+      sp.draw {|&draw|
+        if sp.vx < 0
+          scale -1, 1
+          translate -sp.w, 0
+        end
+        draw.call
+      }
+      sp.contact {|o|
+        sp[:jump] = 0 if o.chip&.y == 0
+      }
+      anim = 0
+      set_interval(0.05) {
+        sp.ox = case
+          when crouch_key?                then 32
+          when jump_key? && sp[:jump] > 0 then (anim / 1) % 2 == 0 ? 40 : 48
+          when sp.vx.abs > 3              then (anim / 2) % 2 == 0 ? 16 : 24
+          else                                 (anim / 5) % 2 == 0 ? 0 : 8
+          end
+        anim += 1
+      }
+      def sp.warp(page)
+        self. x, self. y = $game.width * page + $game.width / 2, $game.height - 20
+        self.vx, self.vy = 0, -200
+      end
+    end
+  end
+
+  def shoot(center, vel)
+    project.chips.at(0, 18, 8, 2).to_sprite.tap do |sp|
+      sp.center        = center
+      sp.dynamic       = true
+      sp.sensor        = true
+      sp.vel           = vel
+      sp.gravity_scale = 0
+      add_sprite @sprites, sp
+      sp.contact {|o|
+        next if o.chip.y != 0
+        remove_sprite @sprites, sp
+        remove_sprite stage.sprites, o
+        project.sounds[3].play
+        shake 3
+      }
+      project.sounds[1].play
+    end
+  end
+
+  def place_bomb(center)
+    project.chips.at(0, 24, 8, 8).to_sprite.tap do |sp|
+      project.sounds[1].play
+
+      add_sprite @sprites, sp
+      sp.center  = center
+      sp.dynamic = true
+
+      anim  = 0
+      timer = set_interval 0.1 do
+        sp.ox = anim % 2 == 0 ? 0 : 8
+        anim += 1
+      end
+
+      sp[:trigger_bomb] = proc do
+        sp[:trigger_bomb] = nil
+        clear_interval timer
+        remove_sprite @sprites, sp
+        explosion sp.center
+      end
+
+      set_timeout 3 do
+        sp[:trigger_bomb]&.call
+      end
+    end
+  end
+
+  def explosion(center, count = 20)
+    count.times do
+      project.chips.at(24, 24, 8, 8).to_sprite.tap do |sp|
+        sp.center        = center + Vector.random2D * rand(5..20)
+        sp.dynamic       = true
+        sp.sensor        = true
+        sp.gravity_scale = 0
+        add_sprite @sprites, sp
+        sp.draw do |&draw|
+          translate -sp.w * 2, -sp.h * 2
+          scale 4, 4
+          draw.call
+        end
+        sp.contact do |o|
+          case
+          when o.chip.y == 0    then remove_sprite stage.sprites, o
+          when o[:trigger_bomb] then set_timeout(0.1) {o[:trigger_bomb]&.call}
+          end
+        end
+        anim = rand(0..4)
+        timer = set_interval 0.02 do
+          sp.ox = 24 + anim % 5 * 8
+          anim += 1
+        end
+        set_timeout rand(0.1..0.4) do
+          clear_interval timer
+          remove_sprite @sprites, sp
+        end
+      end
+      project.sounds[2].play
+      shake 10
+    end
+  end
+
+  def stage()
+    @stage = project.maps[0]
+  end
+
+  def background_shader()
+    @background_shader ||= createShader(nil, <<~END)
+      varying vec4 vertTexCoord;
+      uniform float time;
+      uniform vec4 color1;
+      uniform vec4 color2;
+      void main() {
+        float t  = mod(time, 10.) * 8.;
+        float x  = ( vertTexCoord.x + t) / 20.;
+        float y  = (-vertTexCoord.y + t) / 20.;
+        float fx = fract(x);
+        float fy = fract(y);
+        float xx = fx < 0.5 ? fx * 2. : 1. - (fx - 0.5) * 2.;
+        float yy = fy < 0.5 ? fy * 2. : 1. - (fy - 0.5) * 2.;
+        float m  = smoothstep(0.45, 0.55, (xx + yy) / 2.);
+        gl_FragColor = mix(color1, color2, m);
+      }
+    END
+  end
+end
+
+setup        {$game = Game.new}
+draw         {$game&.draw}
+key_pressed  {$game&.key_down key_code unless key_is_repeated}
