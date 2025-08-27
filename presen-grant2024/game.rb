@@ -481,6 +481,7 @@ class Game
       sp.contact {|o|
         ch = o.chip
         if ch.x == 64 && ch.y == 32
+          # コインと接触した！
           #remove_sprite stage.sprites, o
           #@score += 10
           #project.sounds[11].play
