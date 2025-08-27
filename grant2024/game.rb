@@ -81,16 +81,11 @@ class Room
 end
 
 class PlaygroundRoom < Room
-  def initialize(...)
-    super
-    @score = 0
-  end
-
-  def draw
+  def draw()
     super
     text_font @game.bold_12, 12
     fill 255
-    text "SCORE: #{@score}", 10, 20
+    text "SCORE: #{@game.score}", room_x + width - 100, room_y + 30
   end
 end
 
@@ -231,24 +226,12 @@ def define_rooms(game)
   rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 0, 100, b12, center: true, str: 'E O P'
   }
-=begin
-  rooms.push Room.new(game, 7, 0).tap {|r|
-    r.l 14,16, 14,120, color: [243, 186, 3]
-    r.l 28,16, 28, 90, color: [243, 186, 3]
-    r.l 42,16, 42, 60, color: [243, 186, 3]
-    r.l 56,16, 56, 30, color: [243, 186, 3]
-    r.t 10,  132, r10, str: 'ゲーム実行'
-    r.t 24,  102, r10, str: 'スプライトエディター'
-    r.t 38,  72, r10, str: 'マップエディター'
-    r.t 50,  42, r10, str: 'サウンドエディター'
-    r.t 180, 42, r10, str: '効果音を作成'
-  }
-=end
 end
 
 class Game
   def initialize()
     load_fonts
+    @score   = 0
     @sprites = []
     @rooms   = define_rooms(self).each.with_object({}) {|room, h|
       h[[room.xindex, room.yindex]] = room
@@ -256,6 +239,8 @@ class Game
     set_title '【Ruby Association Activity Report 】    Processing Gem ベースの2D レトロゲームエンジンの開発 (tokujiros)'
     gravity 0, 1000
   end
+
+  attr_accessor :score
 
   attr_reader :prev_room
 
@@ -392,8 +377,9 @@ class Game
       sp.center  = create_vector width / 2, height - 50
       sp.dynamic = true
 
-      sp[:dir]  = 1
-      sp[:jump] = 0
+      sp[:dir]     = 1
+      sp[:jump]    = 0
+      sp[:enlarge] = 0
       sp.update {
         sp.vx -= 20 if  left_key?
         sp.vx += 20 if right_key?
@@ -402,6 +388,11 @@ class Game
         sp[:dir] = sp.vx if sp.vx != 0
       }
       sp.draw {|&draw|
+        enlarge = sp[:enlarge]
+        if enlarge > 0
+          translate 0, -sp.h * enlarge
+          scale enlarge + 1, enlarge + 1
+        end
         if sp.vx < 0
           scale -1, 1
           translate -sp.w, 0
@@ -409,11 +400,32 @@ class Game
         draw.call
       }
       sp.contact {|o|
-        sp[:jump] = 0 if o.chip&.y == 0
+        ch = o.chip
+        if ch.x == 64 && ch.y == 32
+          #@score += 10
+          #remove_sprite stage.sprites, o
+        end
+        if ch.x == 72 && ch.y == 32
+          sp[:enlarge] += 1
+          remove_sprite stage.sprites, o
+          project.sounds[4].play
+        end
+        if ch.x == 80 && ch.y == 32
+          sp[:sick] = true
+          remove_sprite stage.sprites, o
+          project.sounds[5].play
+          set_timeout(2) do
+            sp[:sick]    = false
+            sp[:enlarge] = 0
+            project.sounds[6].play
+          end
+        end
+        sp[:jump] = 0 if ch&.y == 0
       }
       anim = 0
       set_interval(0.05) {
         sp.ox = case
+          when sp[:sick]                  then (anim / 1) % 2 == 0 ? 56 : 64
           when crouch_key?                then 32
           when jump_key? && sp[:jump] > 0 then (anim / 1) % 2 == 0 ? 40 : 48
           when sp.vx.abs > 3              then (anim / 2) % 2 == 0 ? 16 : 24
