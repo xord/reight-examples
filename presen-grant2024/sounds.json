@@ -4,14 +4,46 @@
     "sequence": [
       [
         {
-          "index": 48,
-          "tone": 1
+          "index": 36,
+          "tone": 4
         }
       ],
       [
         {
-          "index": 96,
-          "tone": 1
+          "index": 60,
+          "tone": 0
+        },
+        {
+          "index": 43,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 72,
+          "tone": 0
+        },
+        {
+          "index": 48,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 79,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 83,
+          "tone": 0
+        }
+      ],
+      [
+        {
+          "index": 84,
+          "tone": 0
         }
       ]
     ]

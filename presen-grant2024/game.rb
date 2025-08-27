@@ -407,7 +407,7 @@ class Game
     case code
     when *jump_keys
       if player[:jump] == 0
-        player.vy = -400
+        player.vy = -350
         player[:jump] += 1
         project.sounds[0].play gain: 0.5
       end
