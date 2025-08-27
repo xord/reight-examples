@@ -427,8 +427,9 @@ class Game
       sp.contact {|o|
         ch = o.chip
         if ch.x == 64 && ch.y == 32
-          #@score += 10
           #remove_sprite stage.sprites, o
+          #@score += 10
+          #project.sounds[11].play
         end
         if ch.x == 72 && ch.y == 32
           sp[:enlarge] += 1
@@ -567,10 +568,10 @@ class Game
       sp.dynamic       = true
       sp.gravity_scale = 0
       sp.pos           = [x, y]
-      sp.vy            = -400
+      sp.vy            = -rand(200..500)
       sp.update do
         sp.vy *= 0.96
-        if sp.vel.mag.abs < 1
+        if sp.vel.mag.abs < 3
           remove_sprite @sprites, sp
           fires sp.center, gain: gain
         end
@@ -589,10 +590,10 @@ class Game
       project.chips.at(0, 80, 8, 8).to_sprite.tap do |sp|
         add_sprite @sprites, sp
         sp.center = pos
-        sp.vel    = Vector.random2D * rand(20.0..30.0)
+        sp.vel    = Vector.random2D * rand(20.0..24.0) * 2
         sp.angle  = TAU * rand
         sp.update do
-          sp.vel *= 0.96
+          sp.vel *= 0.94
           sp.vy  += 0.1
         end
         set_timeout rand(2.0..3.0) do
@@ -604,10 +605,10 @@ class Game
       project.chips.at(0, 88, 8, 8).to_sprite.tap do |sp|
         add_sprite @sprites, sp
         sp.center = pos
-        sp.vel    = Vector.random2D * rand(50.0..60.0)
+        sp.vel    = Vector.random2D * rand(50.0..55.0) * 2
         sp.angle  = TAU * rand
         sp.update do
-          sp.vel *= 0.97
+          sp.vel *= 0.95
           sp.vy  += 0.1
         end
         set_timeout rand(2.0..3.0) do
@@ -619,10 +620,10 @@ class Game
       project.chips.at(0, 96, 8, 8).to_sprite.tap do |sp|
         add_sprite @sprites, sp
         sp.center = pos
-        sp.vel    = Vector.random2D * rand(70.0..80.0)
+        sp.vel    = Vector.random2D * rand(70.0..80.0) * 2
         sp.angle  = TAU * rand
         sp.update do
-          sp.vel *= 0.98
+          sp.vel *= 0.96
           sp.vy  += 0.1
         end
         set_timeout rand(3.0..4.0) do
