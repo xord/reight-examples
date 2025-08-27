@@ -279,10 +279,14 @@ class Game
     room
   end
 
+  def last_room?()
+    (player.x / width) >= @rooms.size - 1
+  end
+
   def screen_index()
-    create_vector(
-      (player.x / width) .to_i,
-      (player.y / height).to_i)
+    x = (player.x / width) .to_i
+    y = (player.y / height).to_i
+    create_vector(x, last_room? ? 0 : y)
   end
 
   def shake(size = 20)
@@ -352,7 +356,7 @@ class Game
       if player[:jump] == 0
         player.vy = -400
         player[:jump] += 1
-        project.sounds[0].play gain: 0.3
+        project.sounds[0].play gain: 0.5
       end
     when *shot_keys
       dir = player[:dir] < 0 ? -1 : 1
@@ -377,10 +381,10 @@ class Game
 
   def   left_keys = [LEFT,  :gamepad_left]
   def  right_keys = [RIGHT, :gamepad_right]
-  def   jump_keys = [UP,    :gamepad_button_1]
+  def   jump_keys = [UP,    :gamepad_button_1, :gamepad_a, :gamepad_b]
   def crouch_keys = [DOWN,  :gamepad_down]
-  def   shot_keys = [:z,    :gamepad_button_0]
-  def   bomb_keys = [:x,    :gamepad_button_3]
+  def   shot_keys = [:z,    :gamepad_button_0, :gamepad_x]
+  def   bomb_keys = [:x,    :gamepad_button_3, :gamepad_y]
 
   def   left_key? =   left_keys.any? {key_is_down _1}
   def  right_key? =  right_keys.any? {key_is_down _1}
@@ -402,13 +406,16 @@ class Game
         sp.vx -= 20 if  left_key?
         sp.vx += 20 if right_key?
         sp.vx *= 0.9
-        sp.vy -= 30 if sp[:jump] > 0 && sp.vy > -100 && jump_key?
+        if sp[:jump] > 0 && sp.vy > -100 && jump_key?
+          sp.vy -= 30
+          project.sounds[7].play(gain: 0.3) if frame_count % 5 == 0
+        end
         sp[:dir] = sp.vx if sp.vx != 0
       }
       sp.draw {|&draw|
         enlarge = sp[:enlarge]
-        if enlarge > 0
-          translate 0, -sp.h * enlarge
+        if enlarge > 0 && (!sp[:sick] || frame_count % 8 < 4)
+          translate -sp.w * enlarge / 2, -sp.h * enlarge
           scale enlarge + 1, enlarge + 1
         end
         if sp.vx < 0
@@ -438,12 +445,17 @@ class Game
             project.sounds[6].play
           end
         end
+        if ch.x == 8 && ch.y == 32
+          pos = sp.pos
+          set_timeout(3) {firework pos.x, pos.y}
+          set_timeout(0.3) {project.sounds[8].play}
+        end
         sp[:jump] = 0 if ch&.y == 0
       }
       anim = 0
       set_interval(0.05) {
         sp.ox = case
-          when sp[:sick]                  then (anim / 1) % 2 == 0 ? 56 : 64
+          when sp[:sick] && frame_count % 8 < 4 then (anim / 1) % 2 == 0 ? 56 : 64
           when crouch_key?                then 32
           when jump_key? && sp[:jump] > 0 then (anim / 1) % 2 == 0 ? 40 : 48
           when sp.vx.abs > 3              then (anim / 2) % 2 == 0 ? 16 : 24
@@ -508,14 +520,14 @@ class Game
   def explosion(center, count = 20)
     count.times do
       project.chips.at(24, 24, 8, 8).to_sprite.tap do |sp|
-        sp.center        = center + Vector.random2D * rand(5..20)
+        sp.center        = center + Vector.random2D * rand(5..(last_room? ? 100 : 20))
         sp.dynamic       = true
         sp.sensor        = true
         sp.gravity_scale = 0
         add_sprite @sprites, sp
         sp.draw do |&draw|
           translate -sp.w * 2, -sp.h * 2
-          scale 4, 4
+          (last_room? ? 10 : 4).tap {scale _1, _1}
           draw.call
         end
         sp.contact do |o|
@@ -536,6 +548,87 @@ class Game
       end
       project.sounds[2].play
       shake 10
+    end
+  end
+
+  def firework(x, y, gain: 1, count: 0)
+    gain = 0 if count > 5
+    fire x, y, gain: gain
+    project.sounds[9].play gain: 0.1 * gain
+    set_timeout rand(1.0..3.0) do
+      x = current_room.room_x + rand(10..(width - 10))
+      firework x, y, gain: gain, count: count + 1
+    end
+  end
+
+  def fire(x, y, gain: 1)
+    project.chips.at(0, 72, 8, 8).to_sprite.tap do |sp|
+      add_sprite @sprites, sp
+      sp.dynamic       = true
+      sp.gravity_scale = 0
+      sp.pos           = [x, y]
+      sp.vy            = -400
+      sp.update do
+        sp.vy *= 0.96
+        if sp.vel.mag.abs < 1
+          remove_sprite @sprites, sp
+          fires sp.center, gain: gain
+        end
+      end
+      anim = 0
+      set_interval 0.1 do
+        sp.ox = anim % 2 == 0 ? 0 : 8
+        anim += 1
+      end
+    end
+  end
+
+  def fires(pos, gain: 1)
+    set_timeout(0.5) {project.sounds[10].play gain: 0.5 * gain}
+    20.times do
+      project.chips.at(0, 80, 8, 8).to_sprite.tap do |sp|
+        add_sprite @sprites, sp
+        sp.center = pos
+        sp.vel    = Vector.random2D * rand(20.0..30.0)
+        sp.angle  = TAU * rand
+        sp.update do
+          sp.vel *= 0.96
+          sp.vy  += 0.1
+        end
+        set_timeout rand(2.0..3.0) do
+          remove_sprite @sprites, sp
+        end
+      end
+    end
+    30.times do
+      project.chips.at(0, 88, 8, 8).to_sprite.tap do |sp|
+        add_sprite @sprites, sp
+        sp.center = pos
+        sp.vel    = Vector.random2D * rand(50.0..60.0)
+        sp.angle  = TAU * rand
+        sp.update do
+          sp.vel *= 0.97
+          sp.vy  += 0.1
+        end
+        set_timeout rand(2.0..3.0) do
+          remove_sprite @sprites, sp
+        end
+      end
+    end
+    40.times do
+      project.chips.at(0, 96, 8, 8).to_sprite.tap do |sp|
+        add_sprite @sprites, sp
+        sp.center = pos
+        sp.vel    = Vector.random2D * rand(70.0..80.0)
+        sp.angle  = TAU * rand
+        sp.update do
+          sp.vel *= 0.98
+          sp.vy  += 0.1
+        end
+        set_timeout rand(3.0..4.0) do
+          remove_sprite @sprites, sp
+        end
+      end
     end
   end
 
