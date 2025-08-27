@@ -215,12 +215,14 @@ def define_rooms(game)
   xindex += 1
   rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 20,  30, b12, str: '参考'
-    r.t 30,  60, r10, str: '- ゲームエンジン'
-    r.t 30,  80, r10, str: '    https://github.com/xord/reight'
-    r.t 30, 100, r10, str: '- ゲームエンジン サンプルゲーム集'
-    r.t 30, 120, r10, str: '    https://github.com/xord/reight-examples'
-    r.t 30, 140, r10, str: '- ゼロからの、レトロゲームエンジンの作り方'
-    r.t 30, 160, r10, str: '    https://tinyurl.com/3dbzd6aj'
+    r.t 30,  50, r10, str: '- ゲームエンジン'
+    r.t 30,  70, r10, str: '    https://github.com/xord/reight'
+    r.t 30,  90, r10, str: '- ゲームエンジン サンプルゲーム集'
+    r.t 30, 110, r10, str: '    https://github.com/xord/reight-examples'
+    r.t 30, 130, r10, str: '- この発表資料のソースコード'
+    r.t 30, 150, r10, str: '    https://github.com/xord/reight-examples/tree/presen-grant2024'
+    r.t 30, 170, r10, str: '- ゼロからの、レトロゲームエンジンの作り方'
+    r.t 30, 190, r10, str: '    https://tinyurl.com/3dbzd6aj'
   }
   xindex += 1
   rooms.push Room.new(game, xindex, 0).tap {|r|
