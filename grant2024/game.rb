@@ -229,7 +229,9 @@ def define_rooms(game)
 end
 
 class Game
-  STATE_PATH = 'state.json'
+  STATES_PATH = 'states.json'
+
+  TITLE = '【Ruby Association Activity Report 】    Processing Gem ベースの2D レトロゲームエンジンの開発 (tokujiros)'
 
   def initialize()
     load_fonts
@@ -238,15 +240,10 @@ class Game
     @rooms   = define_rooms(self).each.with_object({}) {|room, h|
       h[[room.xindex, room.yindex]] = room
     }
-    set_title '【Ruby Association Activity Report 】    Processing Gem ベースの2D レトロゲームエンジンの開発 (tokujiros)'
+    update_title
     gravity 0, 1000
 
-    if page = load[:room_xindex]
-      set_timeout do
-        player.warp page
-        screen_offset page * width, 0
-      end
-    end
+    load_states
   end
 
   attr_accessor :score
@@ -260,12 +257,41 @@ class Game
       .map {|type, size| load_font(project.project_dir + "/PixelMplus#{type}.ttf", smooth: false)}
   end
 
-  def save()
-    File.write STATE_PATH, {room_xindex: screen_index.x.to_i}.to_json
+  def save_states()
+    states = {
+      room_xindex: screen_index.x.to_i,
+      start_time:  @start_time
+    }
+    File.write STATES_PATH, states.to_json
   end
 
-  def load()
-    JSON.parse(File.read(STATE_PATH), symbolize_names: true) rescue {}
+  def load_states()
+    states = JSON.parse(File.read(STATES_PATH), symbolize_names: true) rescue {}
+
+    @start_time = states[:start_time]
+    if page = states[:room_xindex]
+      set_timeout do
+        player.warp page
+        screen_offset page * width, 0
+      end
+    end
+  end
+
+  def start_presentation()
+    @start_time = Time.now.to_f
+    save_states
+  end
+
+  def update_title()
+    time =
+      if @start_time
+        end_time = @start_time + (20 * 60)
+        left     = end_time - Time.now.to_f
+        "   残り#{(left / 60).to_i}分#{(left % 60).to_i}秒"
+      else
+        ''
+      end
+    set_title TITLE + time
   end
 
   def current_room()
@@ -274,7 +300,7 @@ class Game
     if room != @current_room
       @prev_room    = @current_room
       @current_room = room
-      save
+      save_states
     end
     room
   end
@@ -333,6 +359,30 @@ class Game
     sprite player, *@sprites
   end
 
+  def draw_progress()
+    x2, y    = width - 10, 5
+    x1       = x2 - @rooms.size * 1
+    progress = screen_index.x.to_f / (@rooms.size - 1)
+
+    no_fill
+    stroke 100
+    line x1, y, x1, y + 2
+
+    y += 1
+    stroke 150, 150, 0
+    line x2, y, x2 - (x2 - x1) * (1 - progress), y
+
+    if @start_time
+      limit    = 20 * 60
+      end_time = @start_time + limit
+      left     = end_time - Time.now.to_f
+
+      y += 1
+      stroke 150, 0, 0
+      line x2, y, x2 - (x2 - x1) * (left / limit), y
+    end
+  end
+
   def draw()
     shader background_shader.tap {|sh|
       sh.set :time, frame_count.to_f / 100.0
@@ -348,6 +398,9 @@ class Game
       draw_rooms
       draw_sprites
     end
+
+    draw_progress
+    update_title if frame_count % 60 == 0
   end
 
   def key_down(code)
@@ -364,6 +417,7 @@ class Game
     when *bomb_keys
       dir = player[:dir] < 0 ? -1 : 1
       place_bomb player.center
+    when F12  then start_presentation
     when :'1' then player.warp 0
     when :'2' then player.warp 1
     when :'3' then player.warp 2
