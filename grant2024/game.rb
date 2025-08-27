@@ -96,24 +96,29 @@ end
 
 def define_rooms(game)
   r10, r12, b10, b12 = game.regular_10, game.regular_12, game.bold_10, game.bold_12
+  face               = loadImage(project.project_dir + '/face.png')
+  editors            = loadImage(project.project_dir + '/editors.png')
 
-  rooms = []
-  rooms.push Room.new(game, 0, 0).tap {|r|
+  rooms  = []
+  xindex = 0
+  rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 0,  50, b12, center: true, str: 'P r o c e s s i n g  G e m  ベ ー ス の'
     r.t 0,  80, b12, center: true, str: '2 D レ ト ロ ゲ ー ム エ ン ジ ン の 開 発'
     r.t 0, 140, r10, center: true, str: 'Ruby Association Activity Report'
     r.t 0, 160, r10, center: true, str: '2025 / 8 / 28'
     r.t 0, 180, r10, center: true, str: '@tokujiros'
   }
-  rooms.push Room.new(game, 1, 0).tap {|r|
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 20,  30, b12, str: '全体の流れ'
-    r.t 30,  60, r10, str: '・成果物としてのレトロゲームエンジン **Reight** の紹介'
-    r.t 30,  80, r10, str: '・ゲーム開発の実演'
+    r.t 30,  60, r10, str: '・レトロゲームエンジン **Reight** の紹介'
+    r.t 30,  80, r10, str: '・レトロゲームエンジン **Reight** でのゲーム開発の実演'
     r.t 30, 100, r10, str: '・今後の予定について'
   }
-  rooms.push Room.new(game, 2, 0).tap {|r|
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t  20,  30, b12, str: '自己紹介'
-    r.i  30,  50, 64, 64, img: loadImage(project.project_dir + '/face.png')
+    r.i  30,  50, 64, 64, img: face
     r.t  30, 135, r12, str: '@tokujiros'
     r.t  30, 165, r10, str: 'x.com/tokujiros'
     r.t  30, 185, r10, str: 'github.com/xord'
@@ -129,60 +134,91 @@ def define_rooms(game)
     r.t 140, 175, r10, str: ' ↓'
     r.t 140, 190, r10, str: 'ゲームエンジン化（← いまここ）'
   }
-  rooms.push Room.new(game, 3, 0).tap {|r|
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 20,  30, b12, str: 'プロジェクト概要'
-    r.t 30,  55, r10, str: '昨年度採択された「CRuby 用 Processing Gem の、本家 Processing との'
-    r.t 30,  70, r10, str: '互換性向上に向けた取り組み」を基に、その成果物である Processing Gem'
-    r.t 30,  85, r10, str: 'を活用し、**新たに 2Dレトロゲームエンジンを開発しました**。'
 
-    r.t 30, 110, r10, str: 'このゲームエンジンはレトロゲームをターゲットとし、解像度や色数、'
-    r.t 30, 125, r10, str: 'オーディオ関連の仕様に意図的な宣言を設けることで、ゲーム開発の複雑さを'
-    r.t 30, 140, r10, str: '軽減し、初心者でも手軽にゲーム制作を始められる環境を提供します。'
-
-    r.t 30, 165, r10, str: 'Ruby と Processing を基盤とするこのゲームエンジンの開発により、'
-    r.t 30, 180, r10, str: 'Ruby を活用したゲーム制作の幅を広げ、コミュニティの発展に貢献する'
-    r.t 30, 195, r10, str: 'ことを目指しています。'
+    r.t 30,  60, r10, str: '昨年度採択された「CRuby 用 Processing Gem の、本家 Processing との'
+    r.t 30,  80, r10, str: '互換性向上に向けた取り組み」を基に、その成果物である Processing Gem'
+    r.t 30, 100, r10, str: 'を活用し、**新たに 2Dレトロゲームエンジンを開発する**。'
   }
-  rooms.push Room.new(game, 4, 0).tap {|r|
-    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 1'
-    r.t 30,  60, r10, str: '・2D ゲームを手軽に作れる**統合開発環境**'
-    r.t 30,  80, r10, str: '　・**スプライト**エディター、**マップ**エディター、**サウンド**エディターなど'
-    r.t 30, 100, r10, str: '・Ruby でゲームを実装可能'
-    r.t 30, 120, r10, str: '・グラフィックス周りは、広く知られた Processing API と互換'
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 (1)'
+    r.t 30,  60, r10, str: '・レトロ風な 2D ゲームを手軽に作って遊ぶことができるアプリ'
+    r.t 30,  80, r10, str: '　・ゲームを Ruby でプログラミングできる'
+    r.t 30, 100, r10, str: '・グラフィックス周りは、広く知られた Processing API と互換'
+    r.t 30, 120, r10, str: '　・2D のゲームやインタラクティブなアプリを作るのに必要十分な機能を持つ'
     r.t 30, 140, r10, str: '　・Processing の学習リソースがほぼそのまま使える'
-    r.t 30, 160, r10, str: '　・2D のゲームやインタラクティブなアプリを作るのに必要十分な機能を持つ'
-    r.t 30, 180, r10, str: '・効果音も手軽に作れて鳴らすのも簡単'
+    r.t 30, 160, r10, str: '・効果音も手軽に作れて鳴らすのも簡単'
   }
-  rooms.push Room.new(game, 5, 0).tap {|r|
-    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 2'
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t  20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 (2)'
+    r.t  30,  60, r10, str: '・2D ゲームを手軽に作れる**統合開発環境**'
+    r.t  30,  80, r10, str: '　・**スプライト**エディター'
+    r.t  30, 100, r10, str: '　・**マップ**エディター'
+    r.t  30, 120, r10, str: '　・**サウンド**エディター'
+    r.i 160, 100, img: editors
+  }
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 (3)'
     r.t 30,  60, r10, str: '・ファミコンからスーパーファミコン世代風のゲームが手軽に作れる'
     r.t 30,  80, r10, str: '　・低解像度グラフィックとピコピコサウンド'
     r.t 30, 100, r10, str: '・ゲーム制作の敷居が低い'
-    r.t 30, 120, r10, str: '　・色数や解像度などが意図的に制限されており、ゲームデザインそのものに'
-    r.t 30, 140, r10, str: '　　集中できる'
+    r.t 30, 120, r10, str: '　・色数や解像度などが意図的に制限されており、ゲームデザイン'
+    r.t 30, 140, r10, str: '　　そのものに集中できる'
     r.t 30, 160, r10, str: '　・ゲームを作りやすく、完成させやすい'
   }
-  rooms.push Room.new(game, 6, 0).tap {|r|
-    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 3'
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '成果物としてのレトロゲームエンジン **Reight** の紹介 (4)'
     r.t 30,  60, r10, str: '・ゲームエンジン全体も Ruby で実装'
     r.t 30,  80, r10, str: '・対応プラットフォームは Mac、Windows など'
     r.t 30, 100, r10, str: '　・gem install reight でインストール可能'
   }
-  rooms.push PlaygroundRoom.new(game, 7, 0).tap {|r|
+  xindex += 1
+  rooms.push PlaygroundRoom.new(game, xindex, 0).tap {|r|
     r.t 20,  30, b12, str: 'ゲーム開発の実演'
   }
-  rooms.push Room.new(game, 8, 0).tap {|r|
-    r.t 20,  30, b12, str: '今後の予定について'
-    r.t 30,  60, r10, str: '・ゲーム実行環境のブラウザー（WebAssembly）対応'
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '今後の予定 (1)'
+    r.t 30,  60, r10, str: 'ゲーム実行環境のブラウザー（WebAssembly）対応'
     r.t 30,  80, r10, str: '　・ゲームエンジンで制作したゲームを手軽に配布可能に'
-    r.t 30, 100, r10, str: '　・ruby.wasm は Emscripten 版を利用予定'
-    r.t 30, 120, r10, str: '　　・WASI 版は OpenGL に対応していないとのこと'
-    r.t 30, 140, r10, str: '・テキストエディターの搭載'
-    r.t 30, 160, r10, str: '　・現状では、ゲームのソースコード編集は外部テキストエディター利用を'
-    r.t 30, 180, r10, str: '　　前提としているが、将来的にはテキストエディターも搭載したい'
-    r.t 30, 200, r10, str: '　・統合環境内でスクリプトを書き換えたらゲーム実行に即反映など'
+    r.t 30, 100, r10, str: '　　・URL を共有するだけで遊んでもらえる'
+    r.t 30, 120, r10, str: '　・ruby.wasm は Emscripten 版を利用予定'
+    r.t 30, 140, r10, str: '　　・WASI 版は OpenGL に対応していないとのこと'
   }
-  rooms.push Room.new(game, 9, 0).tap {|r|
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '今後の予定 (2)'
+    r.t 30,  60, r10, str: 'エンジン自体のアプリ化'
+    r.t 30,  80, r10, str: '　・現状ではコマンドラインから起動'
+    r.t 30, 100, r10, str: '　・Mac、Windows のデスクトップアプリとしても公開したい'
+    r.t 30, 120, r10, str: '　・インタープリターも組み込みにしてアプリをインストールするだけ'
+    r.t 30, 140, r10, str: '　　・環境構築の敷居を下げる'
+  }
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '今後の予定 (3)'
+    r.t 30,  60, r10, str: 'テキストエディターの搭載'
+    r.t 30,  80, r10, str: '　・現状では、ゲームのソースコード編集は外部テキストエディター利用を'
+    r.t 30, 100, r10, str: '　　前提としているが、将来的にはテキストエディターも搭載したい'
+    r.t 30, 120, r10, str: '　・統合環境内でスクリプトを書き換えたらゲーム実行に即反映など'
+  }
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
+    r.t 20,  30, b12, str: '今後の予定 (4)'
+    r.t 30,  60, r10, str: 'Ruby でゲームを作ろう系コンテンツの作成'
+    r.t 30,  80, r10, str: '　・ゲーム開発入門の記事や本、動画を作って公開したい'
+    r.t 30, 100, r10, str: '　・ワークショップ等もやってみたい'
+    r.t 30, 120, r10, str: '　・ゲーム制作は楽しいのでぜひ広めたい'
+    r.t 30, 140, r10, str: '　・（ただしエンジンの仕様がある程度安定するまでは厳しい）'
+  }
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 20,  30, b12, str: '参考'
     r.t 30,  60, r10, str: '- ゲームエンジン'
     r.t 30,  80, r10, str: '    https://github.com/xord/reight'
@@ -191,7 +227,8 @@ def define_rooms(game)
     r.t 30, 140, r10, str: '- ゼロからの、レトロゲームエンジンの作り方'
     r.t 30, 160, r10, str: '    https://tinyurl.com/3dbzd6aj'
   }
-  rooms.push Room.new(game, 10, 0).tap {|r|
+  xindex += 1
+  rooms.push Room.new(game, xindex, 0).tap {|r|
     r.t 0, 100, b12, center: true, str: 'E O P'
   }
 =begin
@@ -330,6 +367,8 @@ class Game
     when :'8' then player.warp 7
     when :'9' then player.warp 8
     when :'0' then player.warp 9
+    when :lbracket then player.warp screen_index.x.to_i - 1
+    when :rbracket then player.warp screen_index.x.to_i + 1
     end
   end
 
@@ -383,6 +422,7 @@ class Game
         anim += 1
       }
       def sp.warp(page)
+        return if page < 0
         self. x, self. y = $game.width * page + $game.width / 2, $game.height - 20
         self.vx, self.vy = 0, -200
       end
@@ -398,7 +438,7 @@ class Game
       sp.gravity_scale = 0
       add_sprite @sprites, sp
       sp.contact {|o|
-        next if o.chip.y != 0
+        next unless o.chip.y == 0 && o.chip.x < 32
         remove_sprite @sprites, sp
         remove_sprite stage.sprites, o
         project.sounds[3].play
