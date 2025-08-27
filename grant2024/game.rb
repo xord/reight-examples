@@ -154,7 +154,7 @@ def define_rooms(game)
     r.t  30,  80, r10, str: '　・**スプライト**エディター'
     r.t  30, 100, r10, str: '　・**マップ**エディター'
     r.t  30, 120, r10, str: '　・**サウンド**エディター'
-    r.i 160, 100, img: editors
+    r.i 170, 100, img: editors
   }
   xindex += 1
   rooms.push Room.new(game, xindex, 0).tap {|r|
@@ -229,6 +229,8 @@ def define_rooms(game)
 end
 
 class Game
+  STATE_PATH = 'state.json'
+
   def initialize()
     load_fonts
     @score   = 0
@@ -238,6 +240,13 @@ class Game
     }
     set_title '【Ruby Association Activity Report 】    Processing Gem ベースの2D レトロゲームエンジンの開発 (tokujiros)'
     gravity 0, 1000
+
+    if page = load[:room_xindex]
+      set_timeout do
+        player.warp page
+        screen_offset page * width, 0
+      end
+    end
   end
 
   attr_accessor :score
@@ -251,12 +260,21 @@ class Game
       .map {|type, size| load_font(project.project_dir + "/PixelMplus#{type}.ttf", smooth: false)}
   end
 
+  def save()
+    File.write STATE_PATH, {room_xindex: screen_index.x.to_i}.to_json
+  end
+
+  def load()
+    JSON.parse(File.read(STATE_PATH), symbolize_names: true) rescue {}
+  end
+
   def current_room()
     index = screen_index
     room  = @rooms[[index.x.to_i, index.y.to_i]]
     if room != @current_room
       @prev_room    = @current_room
       @current_room = room
+      save
     end
     room
   end
