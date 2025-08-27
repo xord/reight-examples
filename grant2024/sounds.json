@@ -10,7 +10,7 @@
       ],
       [
         {
-          "index": 84,
+          "index": 96,
           "tone": 1
         }
       ]
@@ -257,6 +257,524 @@
       [],
       [],
       [],
+      []
+    ]
+  },
+  {
+    "bpm": 240,
+    "sequence": [
+      [
+        {
+          "index": 28,
+          "tone": 1
+        },
+        {
+          "index": 44,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 33,
+          "tone": 1
+        },
+        {
+          "index": 48,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 37,
+          "tone": 1
+        },
+        {
+          "index": 55,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 43,
+          "tone": 1
+        },
+        {
+          "index": 60,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 49,
+          "tone": 1
+        },
+        {
+          "index": 67,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 55,
+          "tone": 1
+        },
+        {
+          "index": 71,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 59,
+          "tone": 1
+        },
+        {
+          "index": 77,
+          "tone": 2
+        }
+      ],
+      [
+        {
+          "index": 64,
+          "tone": 1
+        }
+      ],
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      []
+    ]
+  },
+  {
+    "bpm": 240,
+    "sequence": [
+      [
+        {
+          "index": 49,
+          "tone": 3
+        },
+        {
+          "index": 35,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 42,
+          "tone": 3
+        },
+        {
+          "index": 28,
+          "tone": 4
+        },
+        {
+          "index": 31,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 71,
+          "tone": 3
+        },
+        {
+          "index": 21,
+          "tone": 4
+        },
+        {
+          "index": 28,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 54,
+          "tone": 3
+        },
+        {
+          "index": 15,
+          "tone": 4
+        },
+        {
+          "index": 26,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 27,
+          "tone": 3
+        },
+        {
+          "index": 11,
+          "tone": 4
+        },
+        {
+          "index": 23,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 41,
+          "tone": 3
+        },
+        {
+          "index": 8,
+          "tone": 4
+        },
+        {
+          "index": 21,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 34,
+          "tone": 3
+        },
+        {
+          "index": 5,
+          "tone": 4
+        },
+        {
+          "index": 19,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 64,
+          "tone": 3
+        },
+        {
+          "index": 3,
+          "tone": 4
+        },
+        {
+          "index": 18,
+          "tone": 5
+        }
+      ],
+      [
+        {
+          "index": 18,
+          "tone": 5
+        },
+        {
+          "index": 11,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 20,
+          "tone": 5
+        },
+        {
+          "index": 5,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 24,
+          "tone": 5
+        },
+        {
+          "index": 8,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 27,
+          "tone": 5
+        },
+        {
+          "index": 12,
+          "tone": 4
+        },
+        {
+          "index": 38,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 31,
+          "tone": 5
+        },
+        {
+          "index": 8,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 28,
+          "tone": 5
+        },
+        {
+          "index": 3,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 13,
+          "tone": 5
+        },
+        {
+          "index": 9,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 18,
+          "tone": 5
+        },
+        {
+          "index": 9,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 22,
+          "tone": 5
+        },
+        {
+          "index": 14,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 13,
+          "tone": 5
+        },
+        {
+          "index": 19,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 13,
+          "tone": 5
+        },
+        {
+          "index": 11,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 16,
+          "tone": 5
+        },
+        {
+          "index": 2,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 18,
+          "tone": 5
+        },
+        {
+          "index": 0,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 18,
+          "tone": 5
+        },
+        {
+          "index": 4,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 10,
+          "tone": 5
+        },
+        {
+          "index": 5,
+          "tone": 4
+        },
+        {
+          "index": 29,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 13,
+          "tone": 5
+        },
+        {
+          "index": 2,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 15,
+          "tone": 5
+        },
+        {
+          "index": 1,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 17,
+          "tone": 5
+        },
+        {
+          "index": 3,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 10,
+          "tone": 5
+        },
+        {
+          "index": 4,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 12,
+          "tone": 5
+        },
+        {
+          "index": 2,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 12,
+          "tone": 5
+        },
+        {
+          "index": 3,
+          "tone": 4
+        },
+        {
+          "index": 16,
+          "tone": 3
+        }
+      ],
+      [
+        {
+          "index": 10,
+          "tone": 5
+        },
+        {
+          "index": 3,
+          "tone": 4
+        }
+      ],
+      [
+        {
+          "index": 3,
+          "tone": 4
+        }
+      ]
+    ]
+  },
+  {
+    "bpm": 240,
+    "sequence": [
+      [
+        {
+          "index": 48,
+          "tone": 2
+        },
+        {
+          "index": 45,
+          "tone": 1
+        },
+        {
+          "index": 43,
+          "tone": 4
+        }
+      ],
+      null,
+      [
+        {
+          "index": 38,
+          "tone": 2
+        },
+        {
+          "index": 34,
+          "tone": 1
+        },
+        {
+          "index": 31,
+          "tone": 4
+        }
+      ],
+      null,
+      [
+        {
+          "index": 23,
+          "tone": 2
+        },
+        {
+          "index": 16,
+          "tone": 1
+        },
+        {
+          "index": 18,
+          "tone": 4
+        }
+      ],
+      null,
+      null,
+      [
+        {
+          "index": 9,
+          "tone": 2
+        },
+        {
+          "index": 12,
+          "tone": 1
+        },
+        {
+          "index": 5,
+          "tone": 4
+        }
+      ],
       []
     ]
   }
