@@ -58,10 +58,10 @@ class Game
         $game.spawn_bats if exp % 100 == 0
       end
       sp.update do
-        sp.vx  -= sp.speed if [LEFT,  GAMEPAD_LEFT,  GAMEPAD_LSTICK_LEFT,  GAMEPAD_RSTICK_LEFT] .any? {key_is_down(_1)}
-        sp.vx  += sp.speed if [RIGHT, GAMEPAD_RIGHT, GAMEPAD_LSTICK_RIGHT, GAMEPAD_RSTICK_RIGHT].any? {key_is_down(_1)}
-        sp.vy  -= sp.speed if [UP,    GAMEPAD_UP,    GAMEPAD_LSTICK_DOWN,  GAMEPAD_RSTICK_DOWN] .any? {key_is_down(_1)}
-        sp.vy  += sp.speed if [DOWN,  GAMEPAD_DOWN,  GAMEPAD_LSTICK_UP,    GAMEPAD_RSTICK_UP]   .any? {key_is_down(_1)}
+        sp.vx  -= sp.speed if [:left,  :gamepad_left,  :gamepad_lstick_left,  :gamepad_rstick_left] .any? {key_is_down(_1)}
+        sp.vx  += sp.speed if [:right, :gamepad_right, :gamepad_lstick_right, :gamepad_rstick_right].any? {key_is_down(_1)}
+        sp.vy  -= sp.speed if [:up,    :gamepad_up,    :gamepad_lstick_up,    :gamepad_rstick_up]   .any? {key_is_down(_1)}
+        sp.vy  += sp.speed if [:down,  :gamepad_down,  :gamepad_lstick_down,  :gamepad_rstick_down] .any? {key_is_down(_1)}
         sp.vel *= 0.8
       end
       sp.draw do |&draw|
