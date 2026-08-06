@@ -125,7 +125,7 @@ def define_rooms()
     r.t 30,  70,           str: '- Terminal/TerminalView を実装したリポジトリ'
     r.t 30,  84, size: 12, str: '    https://github.com/xord/reflex-terminal'
     r.t 30, 110,           str: '- このプレゼンのソースコード'
-    r.t 30, 124, size: 12, str: '    https://github.com/xord/reight-examples'
+    r.t 30, 124, size: 12, str: '    https://github.com/xord/reight-examples/blob/presen/presen-omotesando124/game.rb#L53-L74'
     r.t 30, 150,           str: '- ゼロからの、レトロゲームエンジンの作り方'
     r.t 30, 164, size: 12, str: '    https://tinyurl.com/3dbzd6aj'
   }
@@ -246,10 +246,10 @@ class Game
 
   def   left_keys = [LEFT,  :gamepad_left]
   def  right_keys = [RIGHT, :gamepad_right]
-  def   jump_keys = [UP,    :gamepad_button_1]
+  def   jump_keys = [UP,    :gamepad_a, :gamepad_button_1]
   def crouch_keys = [DOWN,  :gamepad_down]
-  def   shot_keys = [:z,    :gamepad_button_0]
-  def   bomb_keys = [:x,    :gamepad_button_3]
+  def   shot_keys = [:z,    :gamepad_x, :gamepad_button_0]
+  def   bomb_keys = [:x,    :gamepad_b, :gamepad_button_3]
 
   def   left_key? =   left_keys.any? {key_is_down _1}
   def  right_key? =  right_keys.any? {key_is_down _1}
