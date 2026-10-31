@@ -1,4 +1,6 @@
 class Game
+  BACKGROUND_CHIP = [0, 256, 256, 256].freeze # x, y, w, h (meadow tile)
+
   def initialize()
     @enemies = []
     @bullets = []
@@ -24,6 +26,7 @@ class Game
     background 0
     push do
       translate -ox, -oy
+      draw_background ox, oy
       fill 255, 32
       sprite player_sensor
       fill 255
@@ -35,6 +38,17 @@ class Game
       text_size 30
       fill 255, 100, 100
       text 'GAME OVER!', 0, 0, width, height
+    end
+  end
+
+  def draw_background(left, top)
+    sx, sy, tw, th = BACKGROUND_CHIP
+    x0 = (left / tw).floor * tw
+    y0 = (top  / th).floor * th
+    (y0..(top + height)).step(th) do |y|
+      (x0..(left + width)).step(tw) do |x|
+        copy project.chips_image, sx, sy, tw, th, x, y, tw, th
+      end
     end
   end
 
