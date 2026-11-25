@@ -44,7 +44,7 @@ $ bundle exec r8 jetrace
 ```
 $ bundle exec r8 survivor
 ```
-![Image](https://github.com/user-attachments/assets/cd61e688-6851-44c5-a03d-c302e56e7b5f)
+![Image](https://github.com/user-attachments/assets/873a45fe-4d3c-4da9-8568-c0a9f607dc50)
 
 ```
 $ bundle exec r8 miner
